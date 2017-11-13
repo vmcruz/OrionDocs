@@ -76,7 +76,7 @@
 							<span class="param-type param-type-string">string</span><span class="param-name">idbName</span>
 						</div>
 						<div class="param-description lfloat">
-							Define un nuevo nombre para la base de datos a crear o abrir si se encuentra creada
+							Define un nuevo {goto:MostachoDB.preparetable} nombre para la base de datos a crear o abrir si se encuentra creada
 						</div>
 					</div>					<div class="param">
 						<div class="fancy-param lfloat">
@@ -171,23 +171,7 @@
 				</div>
 			</div>
 			<div class="paragraph paragraph-h" id="sourcecode">
-								<div class="separator">
-					<span class="subtitle"><i class="fa fa-eye show" data-child="sourcecode" style="margin-right: 5px; margin-top: 5px"></i>Source code | MostachoDB.js@18:28</span>
-				</div>
-				<div data-parent="sourcecode" class="sourcecode">
-<pre class="line-numbers language-clike" data-start="18"><code style="margin: 0; padding: 0">var MostachoDB = function(idbName, idbVersion) {
-    if(!idbName)
-        return undefined;
-    this.idbName = idbName;
-    this.idbVersion = idbVersion;
-    this.idbConnection = undefined;
-    this.tableConfig = [];
-    this.tables = [];
-    this.fakeIDs = [];
-    this.triggers = {};
-}
-</code></pre>
-				</div>
+				
 			</div>
 		</div>
 	</div>

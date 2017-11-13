@@ -63,14 +63,14 @@ Class OTemplate
             Next
 
             If Not tConfiguration.ContainsKey("definition") Then
-                Throw New System.Exception("Tag definition doesn't exist. Can't continue.")
+                Throw New System.Exception("Tag definition doesn't exist.")
             End If
         Else
-            Throw New System.Exception("Template definition template.otd doesn't exist. Can't continue.")
+            Throw New System.Exception("Template definition template.otd doesn't exist.")
         End If
     End Sub
 
-    Public Sub loadTemplateFiles()
+    Public Sub LoadTemplateFiles()
         Dim files() As String = Directory.GetFiles(themePath, "*.ott", SearchOption.TopDirectoryOnly)
         Dim content As String
         For Each f In files
@@ -92,15 +92,15 @@ Class OTemplate
         Next f
 
         If Not ContainsTemplate(themeName) Then
-            Throw New System.Exception("Main template file " + themeName + ".ott doesn't exist. Can't continue.")
+            Throw New System.Exception("Main template file " + themeName + ".ott doesn't exist.")
         End If
     End Sub
 
-    Public Function getTemplateName() As String
+    Public Function GetTemplateName() As String
         Return Me.themeName
     End Function
 
-    Public Function getTagRegex(ByVal tagName As String) As String
+    Public Function GetTagRegex(ByVal tagName As String) As String
         If configExists("definition") Then
             Dim s As Dictionary(Of String, String) = Me.tConfiguration("definition")
             Return s(tagName)
@@ -108,7 +108,7 @@ Class OTemplate
         Return ""
     End Function
 
-    Public Function getTemplate(ByVal templateName As String) As String
+    Public Function GetTemplate(ByVal templateName As String) As String
         Return Me.tagTemplate(templateName)
     End Function
 
@@ -124,7 +124,7 @@ Class OTemplate
         Return Me.tagTemplate.ContainsKey(tagName)
     End Function
 
-    Public Function getConfig(ByVal section As String, ByVal keyName As String) As String
+    Public Function GetConfig(ByVal section As String, ByVal keyName As String) As String
         If configExists(section) Then
             Dim s As Dictionary(Of String, String) = Me.tConfiguration(section)
             If s.ContainsKey(keyName) Then Return s(keyName)
@@ -132,11 +132,11 @@ Class OTemplate
         Return ""
     End Function
 
-    Public Function configExists(ByVal section As String) As Boolean
+    Public Function ConfigExists(ByVal section As String) As Boolean
         Return Me.tConfiguration.ContainsKey(section)
     End Function
 
-    Public Function getBlockTemplate(ByVal block As OBlock, Optional ByVal template As String = "") As String
+    Public Function GetBlockTemplate(ByVal block As OBlock, Optional ByVal template As String = "") As String
         Dim myBlockTemplate As String = ""
 
         If template <> "" Then
@@ -151,8 +151,8 @@ Class OTemplate
         For i = 0 To myTags.Count - 1
             Dim tagReplacement As String = ""
             For j = 0 To block.Count() - 1
-                If block.getTag(j).getName = myTags(i).Groups(1).ToString() Then
-                    tagReplacement += getTagTemplate(block.getTag(j))
+                If block.getTag(j).GetName = myTags(i).Groups(1).ToString() Then
+                    tagReplacement += GetTagTemplate(block.getTag(j))
                 End If
             Next
             myBlockTemplate = myBlockTemplate.Replace(
@@ -164,13 +164,13 @@ Class OTemplate
         Return myBlockTemplate
     End Function
 
-    Public Function getTagTemplate(ByVal tag As OTag, Optional ByVal template As String = "") As String
+    Public Function GetTagTemplate(ByVal tag As OTag, Optional ByVal template As String = "") As String
         Dim myTemplate As String = ""
 
         If template <> "" Then
             myTemplate = template
         Else
-            myTemplate = getTemplate(tag.getName)
+            myTemplate = GetTemplate(tag.GetName)
         End If
 
         Dim searchGroups As Regex
@@ -204,7 +204,7 @@ Class OTemplate
                 groupValue = myMatches(j).Groups(1).ToString()
                 Select Case ele.Key.ToString()
                     Case "tagvalue"
-                        replaceBy = tag.getGroup(
+                        replaceBy = tag.GetGroup(
                                         Convert.ToInt32(
                                             groupValue
                                         )
@@ -228,7 +228,7 @@ Class OTemplate
                     Case "removeinvalid"
                         replaceBy = (New Regex("[^\w]+")).Replace(groupValue, "_")
                     Case "tagname"
-                        replaceBy = tag.getName
+                        replaceBy = tag.GetName
                     Case "template"
                         Dim section As String = myMatches(j).Groups(1).ToString()
                         Dim key As String = myMatches(j).Groups(2).ToString()

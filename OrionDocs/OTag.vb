@@ -41,7 +41,7 @@ Class OTag
                     Dim indentTmp As String = ""
                     For k = startLine To endLine
                         Dim codeLine As String = OrionDocs.orionDocsFileSplitted(k - 1).Replace(vbTab, "    ").Replace(vbCr, "").Replace(vbLf, "")
-                        If codeLine.Length = charInstances(codeLine, " "c) Then
+                        If codeLine.Length = CharInstances(codeLine, " "c) Then
                             codeLine += "&nbsp;"
                         End If
                         If codeLine.TrimStart().Length <> 0 Then indentTmp = codeLine.Replace(codeLine.TrimStart(), "")
@@ -78,11 +78,11 @@ Class OTag
         If isCode Then Me.Groups.Add(Path.GetFileName(OrionDocs.orionDocsProjectFile))
     End Sub
 
-    Public Function getGroup(ByVal index As Integer) As String
+    Public Function GetGroup(ByVal index As Integer) As String
         Return Me.Groups(index)
     End Function
 
-    Public Function getName() As String
+    Public Function GetName() As String
         Return Me.Name
     End Function
 
@@ -99,7 +99,7 @@ Class OTag
     End Function
 
 
-    Public Function charInstances(ByVal str As String, ByVal c As Char) As Integer
+    Public Function CharInstances(ByVal str As String, ByVal c As Char) As Integer
         Dim d As String() = str.Split(c)
         Return d.Count - 1
     End Function

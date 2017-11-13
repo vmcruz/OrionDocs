@@ -13,7 +13,7 @@ Class OBlock
 
     Public Function getBlockType() As String
         If Me.tags.Count > 0 Then
-            Return Me.tags(0).getName
+            Return Me.tags(0).GetName
         Else
             Return ""
         End If

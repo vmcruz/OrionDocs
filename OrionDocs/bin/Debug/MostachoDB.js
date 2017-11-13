@@ -6,14 +6,14 @@
 
 
  @class MostachoDB.__constructor
- @param {string} idbName - Define un nuevo nombre para la base de datos a crear o abrir si se encuentra creada
+ @param {string} idbName - Define un nuevo {goto:MostachoDB.preparetable} nombre para la base de datos a crear o abrir si se encuentra creada
  @param {string} idbVersion - Especifica la versión que se usará para la conexión
  @prop {string} idbName - Guarda el nombre de la base de datos dentro de la instancia
  @prop {number} idbVersion - Guarda la versión de la base de datos a ser creada o abierta
  @prop {idbconnection} idbConnection - Apuntador a la conexión asociada con la base de datos seleccionada
  @prop {object[]} tables - Arreglo de objetos json que guardan la configuración de las tablas
  @example Creación de una nueva instancia de MostachoDB ~ new MostachoDB("TestDB", 1);
- @sourcecode [18-28]
+ @sourcecode {18-28}
 */
 var MostachoDB = function(idbName, idbVersion) {
 	if(!idbName)
@@ -29,10 +29,12 @@ var MostachoDB = function(idbName, idbVersion) {
 
 /**
 @method MostachoDB.preparetable
-@description Genera una entrada para la creación de una tabla en la base de datos. DEBE ser ejecutado antes de realizar [goto:MostachoDB.connect] pues las tablas son creadas o accedidas a través de la conexión.
+@description Genera una entrada para la creación de una tabla en la base de datos. DEBE ser ejecutado antes de realizar la conexión pues las tablas son creadas o accedidas a través de la conexión.
 @param {string} tName - Define un nombre para la tabla
 @param {string} primaryKey - Define una llave primaria para la tabla
 @prop {string[]} tableConfig - Guarda la tupla {tabla:llavePrimaria}
+		@example Test ~ Mostacho.preparetable(function('tabla', 'idtabla') {
+	CosaTesT; }
 */
 MostachoDB.prototype.preparetable = function(tName, primaryKey) {
 	this.tableConfig[tName] = primaryKey;
@@ -44,7 +46,7 @@ MostachoDB.prototype.preparetable = function(tName, primaryKey) {
 @param {function} onupgrade - Se ejecuta sólo cuando ocurre un cambio de versión de base de datos. Toma un parámetro opcional el cual es la instancia de MostachoDB
 @param {function} onready - Se ejecuta cuando la conexión con la base de datos ha sido creada satisfactoriamente y la sincronización ha terminado. Toma un parámetro opcional el cual es la instancia de MostachoDB
 @example Eventos onupgrade y onready ~ MostachoDB.connect(function (instance) {
-	console.log('Evento para modificar la estructura de la base de datos');
+	console.log('Evento para modificar la estructura de la base de datos);
 }, function(instance) {
 	console.log('Evento que se dispara cuando la base de datos termina de cargar');
 	console.log(instance);
@@ -78,12 +80,14 @@ MostachoDB.prototype.connect = function(onupgrade, onready) {
 	}
 }
 
-/**
-@method MostachoDB.sync
-@description Sincroniza las tablas de la instancia con la base de datos.
-@warning Borra todos los cambios de las transacciones que no hayan sido procesadas por IndexedDB hasta ese momento.
-@param {function} onready - Función definida por el usuario, se ejecuta cuando finaliza la sincronización. Toma un parámetro opcional el cual es la instancia de MostachoDB
-*/
+		/**
+		Sincroniza las tablas de la instancia
+	con
+		la base de datos.
+		@method MostachoDB.sync
+		@warning Borra todos los cambios de las transacciones que no hayan sido procesadas por IndexedDB hasta ese momento.
+		@param {function} onready - Función definida por el usuario, se ejecuta cuando finaliza la sincronización. Toma un parámetro opcional el cual es la instancia de MostachoDB
+		*/
 MostachoDB.prototype.sync = function(onready) {
 	var tables = this.idbConnection.objectStoreNames;
 	var counter = 0;
@@ -170,7 +174,7 @@ MostachoDB.prototype.isConnected = function() {
 @method MostachoDB.droptable
 @description Elimina una tabla de la base de datos.
 @warning Los datos eliminados de la tabla no podrán ser recuperados.
-@notice Realizará la acción sólo si es invocado dentro de la función <onupgrade> del método [goto:MostachoDB.connect]
+@notice Realizará la acción sólo si es invocado dentro de la función <onupgrade> del método {goto:MostachoDB.connect}
 @param {string} tName - El nombre de la tabla a eliminar
 */
 MostachoDB.prototype.droptable = function(tName) {
@@ -436,8 +440,8 @@ MostachoDB.prototype.with = function(tName) {
 		@function MostachoDB.with.joinClause
 		@exposure private
 		@description Devuelve un objeto con el join especificado
-		@param {object} firstStorage - Instancia de un almacén de objetos [goto:MostachoDB.with]
-		@param {object} secondStorage - Instancia de un almacén de objetos [goto:MostachoDB.with]
+		@param {object} firstStorage - Instancia de un almacén de objetos {goto:MostachoDB.with}
+		@param {object} secondStorage - Instancia de un almacén de objetos {goto:MostachoDB.with}
 		@param {object} join - Especifica los campos a comparar. Formato del objeto: {on: 'campoTabla1', equals: 'campoTabla2'}
 		@param {string} fields - Campos a seleccionar separados por coma
 		@param {string} joinType - Tipo de Join a realizar: innerjoin, fulljoin, leftjoin, rightjoin		 
@@ -599,7 +603,7 @@ MostachoDB.prototype.with = function(tName) {
 		/**
 		@function MostachoDB.with.whereClause
 		@exposure private
-		@description Devuelve un arreglo de objetos (o una instancia [goto:MostachoDB.with]) que cumplan la condición establecida
+		@description Devuelve un arreglo de objetos (o una instancia {goto:MostachoDB.with}) que cumplan la condición establecida
 		@warning Sólo puede ser usado después de select
 		@param {object[]} recordset - Arreglo de objetos a ser considerados para la condición
 		@param {string} args - Condición empleada para la selección de registros
@@ -732,8 +736,8 @@ MostachoDB.prototype.with = function(tName) {
 		/**
 		 @function MostachoDB.with.orderByClause
 		 @exposure private
-		 @description Método que permite ordenar los registros devueltos por [goto:MostachoDB.with.whereClause]
-		 @param {object[]} recordset - Conjunto de registros devueltos por [goto:MostachoDB.with.whereClause]
+		 @description Método que permite ordenar los registros devueltos por {goto:MostachoDB.with.whereClause}
+		 @param {object[]} recordset - Conjunto de registros devueltos por {goto:MostachoDB.with.whereClause}
 		 @param {string[]} fields - Conjunto de campos que deben ser copiados
 		 @param {string} field - Campo por el cuál deben ser ordenados los registros
 		*/
@@ -775,9 +779,9 @@ MostachoDB.prototype.with = function(tName) {
 		/**
 		@function MostachoDB.with.unionClause
 		@exposure private
-		@description Método que permite unir los objetos devueltos por dos [goto:MostachoDB.with.select] ordenados por el primer campo ascendentemente
-		@param {object[]} recordsetA - Conjunto de registros devueltos por [goto:MostachoDB.with.select] o su instancia
-		@param {object[]} recordsetB - Conjunto de registros devueltos por [goto:MostachoDB.with.select] o su instancia
+		@description Método que permite unir los objetos devueltos por dos {goto:MostachoDB.with.select} ordenados por el primer campo ascendentemente
+		@param {object[]} recordsetA - Conjunto de registros devueltos por {goto:MostachoDB.with.select} o su instancia
+		@param {object[]} recordsetB - Conjunto de registros devueltos por {goto:MostachoDB.with.select} o su instancia
 		@param {string[]} fields - Conjunto de campos que deben ser copiados
 		*/		
 		function unionClause(recordsetA, recordsetB, fields) {
@@ -802,9 +806,9 @@ MostachoDB.prototype.with = function(tName) {
 		/**
 		@function MostachoDB.with.unionallClause
 		@exposure private
-		@description Método que permite unir los objetos devueltos por dos [goto:MostachoDB.with.select] y posibilidad de ordenarlos mediante [orderByClause]
-		@param {object[]} recordsetA - Conjunto de registros devueltos por [goto:MostachoDB.with.select] o su instancia
-		@param {object[]} recordsetB - Conjunto de registros devueltos por [goto:MostachoDB.with.select] o su instancia
+		@description Método que permite unir los objetos devueltos por dos {goto:MostachoDB.with.select} y posibilidad de ordenarlos mediante [orderByClause]
+		@param {object[]} recordsetA - Conjunto de registros devueltos por {goto:MostachoDB.with.select} o su instancia
+		@param {object[]} recordsetB - Conjunto de registros devueltos por {goto:MostachoDB.with.select} o su instancia
 		@param {string[]} fields - Conjunto de campos que deben ser copiados
 		*/
 		function unionallClause(recordsetA, recordsetB, fields) {
