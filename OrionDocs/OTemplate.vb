@@ -1,0 +1,251 @@
+﻿Imports System.Text.RegularExpressions
+Imports System.Text
+Imports System.IO
+
+Class OTemplate
+    'Private tagDefinition As Dictionary(Of String, String)
+    Private tagTemplate As Dictionary(Of String, String)
+    Private tConfiguration As New Dictionary(Of String, Dictionary(Of String, String))
+    Private appPath As String = System.AppDomain.CurrentDomain.BaseDirectory()
+    Private themePath As String
+    Private themeName As String
+
+    Public Sub New(ByVal themeName As String)
+        'tagDefinition = New Dictionary(Of String, String)
+        tagTemplate = New Dictionary(Of String, String)
+        Me.themeName = themeName
+
+        Me.themePath = appPath + "templates\" + themeName
+        Dim content As String
+
+        Dim definition As String = themePath + "\template.otd"
+        If File.Exists(definition) Then
+            Dim OTD As StreamReader = New StreamReader(definition, Encoding.UTF8)
+            content = OTD.ReadToEnd()
+            OTD.Close()
+
+            Dim data As String = "", key As String = ""
+            Dim keyValue As String()
+            Dim tmpDict As Dictionary(Of String, String)
+
+            Dim grupos As Regex = New Regex("\#SECTION\s*(\w+)(.+?)\#END_SECTION", RegexOptions.Singleline)
+            Dim matchGrupos As MatchCollection = grupos.Matches(content)
+
+            For i = 0 To matchGrupos.Count - 1
+                key = matchGrupos(i).Groups(1).ToString().ToLower()
+                data = matchGrupos(i).Groups(2).ToString()
+                keyValue = data.Split(",")
+                tmpDict = New Dictionary(Of String, String)
+                For j = 0 To keyValue.Count - 1
+                    Dim context As String = keyValue(j).Trim()
+                    Dim startKey = context.IndexOf(":")
+                    If startKey > -1 Then
+                        Dim subKey As String = context.Substring(0, startKey).Trim()
+                        If startKey + 1 < context.Length Then
+                            Dim subValue As String = context.Substring(startKey + 1).Trim()
+
+                            If subKey.Length > 0 AndAlso subKey.Substring(0, 1) <> "#" Then
+                                If tmpDict.ContainsKey(subKey) Then
+                                    tmpDict(subKey) = subValue
+                                Else
+                                    If subKey <> "" And subValue <> "" Then tmpDict.Add(subKey, subValue)
+                                End If
+                            End If
+                        End If
+                    End If
+                Next
+
+                If tConfiguration.ContainsKey(key) Then
+                    tConfiguration(key) = tmpDict
+                Else
+                    tConfiguration.Add(key, tmpDict)
+                End If
+            Next
+
+            If Not tConfiguration.ContainsKey("definition") Then
+                Throw New System.Exception("Tag definition doesn't exist. Can't continue.")
+            End If
+        Else
+            Throw New System.Exception("Template definition template.otd doesn't exist. Can't continue.")
+        End If
+    End Sub
+
+    Public Sub loadTemplateFiles()
+        Dim files() As String = Directory.GetFiles(themePath, "*.ott", SearchOption.TopDirectoryOnly)
+        Dim content As String
+        For Each f In files
+            If File.Exists(f) Then
+                Dim OTT As StreamReader = New StreamReader(f, Encoding.UTF8)
+                content = OTT.ReadToEnd()
+
+                'Variables especiales convertidas a texto
+                content = content.Replace("{VERSION}", OrionDocs.orionDocsVersion)
+                content = content.Replace("{BUILD}", OrionDocs.orionDocsBuild)
+                content = content.Replace("{PROJECT_TITLE}", OrionDocs.templateConfiguration("DEFAULT_PROJECT_TITLE"))
+                content = content.Replace("{FILE_EXTENSION}", OrionDocs.templateConfiguration("FILE_EXTENSION"))
+
+                Dim name As String = Path.GetFileName(f).Replace(".ott", "")
+                OTT.Close()
+
+                tagTemplate.Add(name, content)
+            End If
+        Next f
+
+        If Not ContainsTemplate(themeName) Then
+            Throw New System.Exception("Main template file " + themeName + ".ott doesn't exist. Can't continue.")
+        End If
+    End Sub
+
+    Public Function getTemplateName() As String
+        Return Me.themeName
+    End Function
+
+    Public Function getTagRegex(ByVal tagName As String) As String
+        If configExists("definition") Then
+            Dim s As Dictionary(Of String, String) = Me.tConfiguration("definition")
+            Return s(tagName)
+        End If
+        Return ""
+    End Function
+
+    Public Function getTemplate(ByVal templateName As String) As String
+        Return Me.tagTemplate(templateName)
+    End Function
+
+    Public Function ContainsDefinition(ByVal tagName As String) As Boolean
+        If configExists("definition") Then
+            Dim s As Dictionary(Of String, String) = Me.tConfiguration("definition")
+            Return s.ContainsKey(tagName)
+        End If
+        Return False
+    End Function
+
+    Public Function ContainsTemplate(ByVal tagName As String) As Boolean
+        Return Me.tagTemplate.ContainsKey(tagName)
+    End Function
+
+    Public Function getConfig(ByVal section As String, ByVal keyName As String) As String
+        If configExists(section) Then
+            Dim s As Dictionary(Of String, String) = Me.tConfiguration(section)
+            If s.ContainsKey(keyName) Then Return s(keyName)
+        End If
+        Return ""
+    End Function
+
+    Public Function configExists(ByVal section As String) As Boolean
+        Return Me.tConfiguration.ContainsKey(section)
+    End Function
+
+    Public Function getBlockTemplate(ByVal block As OBlock, Optional ByVal template As String = "") As String
+        Dim myBlockTemplate As String = ""
+
+        If template <> "" Then
+            myBlockTemplate = getTagTemplate(block.getTag(0), template)
+        Else
+            myBlockTemplate = getTagTemplate(block.getTag(0))
+        End If
+
+        Dim searchTags As Regex = New Regex("{(@\w+)}")
+        Dim myTags As MatchCollection = searchTags.Matches(myBlockTemplate)
+
+        For i = 0 To myTags.Count - 1
+            Dim tagReplacement As String = ""
+            For j = 0 To block.Count() - 1
+                If block.getTag(j).getName = myTags(i).Groups(1).ToString() Then
+                    tagReplacement += getTagTemplate(block.getTag(j))
+                End If
+            Next
+            myBlockTemplate = myBlockTemplate.Replace(
+                        myTags(i).Groups(0).ToString(),
+                        tagReplacement
+                    )
+        Next
+
+        Return myBlockTemplate
+    End Function
+
+    Public Function getTagTemplate(ByVal tag As OTag, Optional ByVal template As String = "") As String
+        Dim myTemplate As String = ""
+
+        If template <> "" Then
+            myTemplate = template
+        Else
+            myTemplate = getTemplate(tag.getName)
+        End If
+
+        Dim searchGroups As Regex
+        Dim myMatches As MatchCollection
+        Dim specialRegexes = New Dictionary(Of String, String)
+        Dim ele As KeyValuePair(Of String, String)
+        Dim replaceBy As String = ""
+        Dim groupValue As String = ""
+
+        '#FUNCIONES ESPECIALES DENTRO DEL TEMPLATE
+        specialRegexes.Add("tagvalue", "{(\d+)}")
+        specialRegexes.Add("tolower", "{\s*tolower\(\s*(.+)\s*\)\s*}")
+        specialRegexes.Add("toupper", "{\s*toupper\(\s*(.+)\s*\)\s*}")
+        specialRegexes.Add("padleft", "{\s*padleft\(\s*(.+),\s*(\d+),\s*(.+)\)\s*}")
+        specialRegexes.Add("padright", "{\s*padright\(\s*(.+),\s*(\d+),\s*(.+)\)\s*}")
+        specialRegexes.Add("trim", "{\s*trim\(\s*(.+)\s*\)\s*}")
+        specialRegexes.Add("replace", "{\s*replace\(\s*(.+),\s*(.+),\s*(.+)\)\s*}")
+        specialRegexes.Add("substring", "{\s*substring\(\s*(.+),\s*(.+),\s*(.+)\)\s*}")
+        specialRegexes.Add("length", "{\s*length\(\s*(.+)\s*\)\s*}")
+        specialRegexes.Add("removeinvalid", "{\s*removeinvalid\(\s*(.+)\s*\)\s*}")
+        specialRegexes.Add("tagname", "{\s*tagname\s*}")
+        specialRegexes.Add("template", "{\s*template\.(\w+)\.(\w+)\s*}")
+
+        For i = 0 To specialRegexes.Count - 1
+            ele = specialRegexes.ElementAt(i)
+            searchGroups = New Regex(ele.Value, RegexOptions.IgnoreCase)
+            myMatches = searchGroups.Matches(myTemplate)
+
+            For j = 0 To myMatches.Count - 1
+                replaceBy = ""
+                groupValue = myMatches(j).Groups(1).ToString()
+                Select Case ele.Key.ToString()
+                    Case "tagvalue"
+                        replaceBy = tag.getGroup(
+                                        Convert.ToInt32(
+                                            groupValue
+                                        )
+                                    )
+                    Case "tolower"
+                        replaceBy = groupValue.ToLower()
+                    Case "toupper"
+                        replaceBy = groupValue.ToUpper()
+                    Case "padleft"
+                        replaceBy = groupValue.PadLeft(Integer.Parse(myMatches(j).Groups(2).ToString()), myMatches(j).Groups(3).ToString())
+                    Case "padright"
+                        replaceBy = groupValue.PadRight(Integer.Parse(myMatches(j).Groups(2).ToString()), myMatches(j).Groups(3).ToString())
+                    Case "trim"
+                        replaceBy = groupValue.Trim()
+                    Case "replace"
+                        replaceBy = groupValue.Replace(myMatches(j).Groups(2).ToString(), myMatches(j).Groups(3).ToString())
+                    Case "substring"
+                        replaceBy = groupValue.Substring(myMatches(j).Groups(2).ToString(), myMatches(j).Groups(3).ToString())
+                    Case "length"
+                        replaceBy = groupValue.Length
+                    Case "removeinvalid"
+                        replaceBy = (New Regex("[^\w]+")).Replace(groupValue, "_")
+                    Case "tagname"
+                        replaceBy = tag.getName
+                    Case "template"
+                        Dim section As String = myMatches(j).Groups(1).ToString()
+                        Dim key As String = myMatches(j).Groups(2).ToString()
+                        If section <> "" AndAlso key <> "" AndAlso tConfiguration.ContainsKey(section) Then
+                            Dim t As Dictionary(Of String, String) = tConfiguration(section)
+                            If t.ContainsKey(key) Then
+                                replaceBy = t(key)
+                            End If
+                        End If
+                End Select
+
+                myTemplate = myTemplate.Replace(
+                            myMatches(j).Groups(0).ToString(),
+                            replaceBy
+                        )
+            Next
+        Next
+        Return myTemplate
+    End Function
+End Class

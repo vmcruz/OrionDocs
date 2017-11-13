@@ -1,0 +1,12 @@
+C:\Users\Víctor\AppData\Local\Temporary Projects\OrionDocs\bin\Debug\OrionDocs.exe.config
+C:\Users\Víctor\Documents\Visual Studio 2013\Projects\OrionDocs\OrionDocs\bin\Debug\OrionDocs.exe
+C:\Users\Víctor\Documents\Visual Studio 2013\Projects\OrionDocs\OrionDocs\bin\Debug\OrionDocs.exe.config
+C:\Users\Víctor\Documents\Visual Studio 2013\Projects\OrionDocs\OrionDocs\obj\Debug\OrionDocs.frmMain.resources
+C:\Users\Víctor\Documents\Visual Studio 2013\Projects\OrionDocs\OrionDocs\obj\Debug\OrionDocs.Resources.resources
+C:\Users\Víctor\Documents\Visual Studio 2013\Projects\OrionDocs\OrionDocs\obj\Debug\OrionDocs.vbproj.GenerateResource.Cache
+C:\Users\Víctor\Documents\Visual Studio 2013\Projects\OrionDocs\OrionDocs\obj\Debug\OrionDocs.exe
+C:\Users\Víctor\Documents\Visual Studio 2013\Projects\OrionDocs\OrionDocs\obj\Debug\OrionDocs.xml
+C:\Users\Víctor\Documents\Visual Studio 2013\Projects\OrionDocs\OrionDocs\obj\Debug\OrionDocs.pdb
+C:\Users\Víctor\Documents\Visual Studio 2013\Projects\OrionDocs\OrionDocs\bin\Debug\OrionDocs.pdb
+C:\Users\Víctor\Documents\Visual Studio 2013\Projects\OrionDocs\OrionDocs\bin\Debug\OrionDocs.xml
+C:\Users\Víctor\Documents\Visual Studio 2013\Projects\OrionDocs\OrionDocs\obj\Debug\OrionDocs.vbprojResolveAssemblyReference.cache
