@@ -31,7 +31,6 @@ Module OrionDocs
         Dim argv As String() = Environment.GetCommandLineArgs()
         Dim argc As Integer = argv.Count
         Console.OutputEncoding = System.Text.Encoding.Unicode
-        'CompileProject()
         If argc - 1 > 0 Then
             If argv(1).ToLower() = "-h" Or argv(1).ToLower() = "/?" Or argv(1).ToLower() = "/h" Or argv(1).ToLower() = "--help" Then
                 ShowHelp()
