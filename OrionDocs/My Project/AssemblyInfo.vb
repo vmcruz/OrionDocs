@@ -10,8 +10,8 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("OrionDocs")> 
-<Assembly: AssemblyDescription("Console Documentor")> 
+<Assembly: AssemblyTitle("OrionDocs")>
+<Assembly: AssemblyDescription("Documentation maker")>
 <Assembly: AssemblyCompany("Víctor Cruz")> 
 <Assembly: AssemblyProduct("OrionDocs")> 
 <Assembly: AssemblyCopyright("2017")> 
@@ -20,7 +20,7 @@ Imports System.Runtime.InteropServices
 <Assembly: ComVisible(False)> 
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("09c6d196-50da-43cf-bee7-f6d277ecd9c3")> 
+<Assembly: Guid("09c6d196-50da-43cf-bee7-f6d277ecd9c3")>
 
 ' Version information for an assembly consists of the following four values:
 '
@@ -33,7 +33,7 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("0.17.0.0")> 
-<Assembly: AssemblyFileVersion("0.17.0.0")> 
+<Assembly: AssemblyVersion("0.17.0.3")>
+<Assembly: AssemblyFileVersion("0.17.0.3")>
 
 <Assembly: NeutralResourcesLanguageAttribute("en")> 

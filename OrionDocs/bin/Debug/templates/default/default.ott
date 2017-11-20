@@ -13,7 +13,7 @@
 	<link rel="stylesheet" href="fa/css/font-awesome.min.css" type="text/css" />
 	<!-- Menu construction -->
 	<script type="text/javascript">
-		var menuItems = [{LOADMENU:fancy_menu.ott}];
+		var menuItems = [{foreachblock:fancy_menu.ott}];
 	</script>
 </head>
 <body>

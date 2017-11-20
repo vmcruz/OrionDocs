@@ -1,11 +1,11 @@
 #Template Info
 #SECTION info
-	name: Fancy,
-	description: Default template for OrionDocs v0.16.2.3β,
-	author: Víctor Cruz,
-	contact: vmcruz16@gmail.com,
-	web: http://victor.cr/uz,
-	copyright: 2016,
+	name: Fancy
+	description: Default template for OrionDocs v0.16.2.3β
+	author: Víctor Cruz
+	contact: vmcruz16@gmail.com
+	web: http://victor.cr/uz
+	copyright: 2016
 	screenshot: screenshot.png
 #END_SECTION
 
@@ -13,36 +13,36 @@
 #Format
 #@tag: regex
 #SECTION definition
-	@class: ^((\w+)\.?)+$,
-	@singleton: ^((\w+)\.?)+$,
-	@method: ^((\w+)\.?)+$,
-	@function: ^((\w+)\.?)+$,
-	@param: {(\*?(\w+)(?:\[\])?)}\s*(\w+)\s*-\s*(.+),
-	@var: {(\*?(\w+)(?:\[\])?)}\s*(\w+)\s*-\s*(.+),
-	@prop: {(\*?(\w+)(?:\[\])?)}\s*(\w+)\s*-\s*(.+),
-	@returns: {(\*?(\w+)(?:\[\])?)}\s*(.+),
-	@description: ^([\s\S]+)$,
-	@author: ^(.+)$,
-	@warning: ^(.+)$,
-	@notice: ^(.+)$,
-	@contact: ^(\w+@.+)$,
-	@license: ^(.+)\s+((?i)https?\:\/\/.*)$,
-	@created: ^(.+)$,
-	@updated: ^(.+)$,
-	@deprecated: ^(.+)$,
-	@example: ^(.+)\s*\~\s*([\s\S]+)$,
-	@tutorial: ^(.+)\s+(.+)$,
-	@version: ^([a-zA-Z0-9\.\-\+]+)$,
-	@exposure: \b(private|public|protected)\b,
-	@sourcecode: (\[\s*(\d+)\s*\-\s*(\d+)\s*\])
+	@class: ^((\w+)\.?)+$
+	@singleton: ^((\w+)\.?)+$
+	@method: ^((\w+)\.?)+$
+	@function: ^((\w+)\.?)+$
+	@param: {(\*?(\w+)(?:\[\])?)}\s*(\w+)\s*-\s*(.+)
+	@var: {(\*?(\w+)(?:\[\])?)}\s*(\w+)\s*-\s*(.+)
+	@prop: {(\*?(\w+)(?:\[\])?)}\s*(\w+)\s*-\s*(.+)
+	@returns: {(\*?(\w+)(?:\[\])?)}\s*(.+)
+	@description: ^([\s\S]+)$
+	@author: ^(.+)$
+	@warning: ^(.+)$
+	@notice: ^(.+)$
+	@contact: ^(\w+@.+)$
+	@license: ^(.+)\s+((?i)https?\:\/\/.*)$
+	@created: ^(.+)$
+	@updated: ^(.+)$
+	@deprecated: ^(.+)$
+	@example: ^(.+)\s*\~\s*([\s\S]+)$
+	@tutorial: ^(.+)\s+(.+)$
+	@version: ^([a-zA-Z0-9\.\-\+]+)$
+	@exposure: \b(private|public|protected)\b
+	@sourcecode: (\{\s*sourcecode\s*:\s*(\d+)\s*\,\s*(\d+)\s*\})
 #END_SECTION
 
 #Config			
 #SECTION config
-	copydir: css + fa + js + prism,
-	firstline: @description,
-	file_ext: .html,
-	default_project_title: Reference
+	copydir: css + fa + js + prism
+	firstline: @description
+	fileext: .html
+	title: Reference
 #END_SECTION
 
 #You can add custom configuration here.

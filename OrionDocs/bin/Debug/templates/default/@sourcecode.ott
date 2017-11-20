@@ -1,5 +1,5 @@
 				<div class="separator">
-					<span class="subtitle"><i class="fa fa-eye show" data-child="sourcecode" style="margin-right: 5px; margin-top: 5px"></i>Source code | {4}@{2}:{3}</span>
+					<span class="subtitle"><i class="fa fa-eye show" data-child="sourcecode" style="margin-right: 5px; margin-top: 5px"></i>Source code@{2}:{3}</span>
 				</div>
 				<div data-parent="sourcecode" class="sourcecode">
 <pre class="line-numbers language-clike" data-start="{2}"><code style="margin: 0; padding: 0">{1}</code></pre>

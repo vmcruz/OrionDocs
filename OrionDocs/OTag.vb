@@ -14,7 +14,7 @@ Class OTag
             theData = groups(i).ToString().Trim()
 
             '#GOTO
-            Dim searchGroups As Regex = New Regex("\[\s*goto:\s*(.+?)\s*\]", RegexOptions.IgnoreCase)
+            Dim searchGroups As Regex = New Regex("\{\s*goto\s*:\s*(.+?)\s*\}", RegexOptions.IgnoreCase)
             Dim myMatches As MatchCollection = searchGroups.Matches(theData)
 
             For j = 0 To myMatches.Count - 1
@@ -26,15 +26,15 @@ Class OTag
                         )
             Next
 
-            '#CODE
-            searchGroups = New Regex("\[\s*(\d+)\s*\-\s*(\d+)\s*\]", RegexOptions.IgnoreCase)
+            '#SOURCECODE
+            searchGroups = New Regex("\{\s*sourcecode\s*:\s*(\d+)\s*\,\s*(\d+)\s*\}", RegexOptions.IgnoreCase)
             myMatches = searchGroups.Matches(theData)
 
             For j = 0 To myMatches.Count - 1
                 Dim startLine As Integer = Integer.Parse(myMatches(j).Groups(1).ToString())
                 Dim endLine As Integer = Integer.Parse(myMatches(j).Groups(2).ToString())
 
-                If startLine > 0 And endLine <= OrionDocs.orionDocsFileSplitted.Count() Then
+                If startLine > 0 AndAlso endLine <= OrionDocs.orionDocsFileSplitted.Count() Then
                     Dim code As String = ""
                     Dim isFirstLine As Boolean = True
                     Dim indent As String = ""
@@ -74,8 +74,6 @@ Class OTag
             Next
             Me.Groups.Add(theData)
         Next
-
-        If isCode Then Me.Groups.Add(Path.GetFileName(OrionDocs.orionDocsProjectFile))
     End Sub
 
     Public Function GetGroup(ByVal index As Integer) As String

@@ -28,29 +28,33 @@ Class OTemplate
             Dim keyValue As String()
             Dim tmpDict As Dictionary(Of String, String)
 
-            Dim grupos As Regex = New Regex("\#SECTION\s*(\w+)(.+?)\#END_SECTION", RegexOptions.Singleline)
+            Dim grupos As Regex = New Regex("\#section\s*(\w+)(.+?)\#end_section", RegexOptions.Singleline + RegexOptions.IgnoreCase)
             Dim matchGrupos As MatchCollection = grupos.Matches(content)
 
             For i = 0 To matchGrupos.Count - 1
                 key = matchGrupos(i).Groups(1).ToString().ToLower()
                 data = matchGrupos(i).Groups(2).ToString()
-                keyValue = data.Split(",")
+                keyValue = data.Split(vbCrLf)
                 tmpDict = New Dictionary(Of String, String)
                 For j = 0 To keyValue.Count - 1
                     Dim context As String = keyValue(j).Trim()
-                    Dim startKey = context.IndexOf(":")
-                    If startKey > -1 Then
-                        Dim subKey As String = context.Substring(0, startKey).Trim()
-                        If startKey + 1 < context.Length Then
-                            Dim subValue As String = context.Substring(startKey + 1).Trim()
+                    If context.Length > 0 AndAlso context.Substring(0, 1) <> "#" Then
+                        Dim startKey = context.IndexOf(":")
+                        If startKey > 0 Then
+                            Dim subKey As String = context.Substring(0, startKey).Trim()
+                            If startKey + 1 < context.Length Then
+                                Dim subValue As String = context.Substring(startKey + 1).Trim()
 
-                            If subKey.Length > 0 AndAlso subKey.Substring(0, 1) <> "#" Then
                                 If tmpDict.ContainsKey(subKey) Then
                                     tmpDict(subKey) = subValue
                                 Else
-                                    If subKey <> "" And subValue <> "" Then tmpDict.Add(subKey, subValue)
+                                    If subKey <> "" AndAlso subValue <> "" Then tmpDict.Add(subKey, subValue)
                                 End If
+                            Else
+                                Throw New System.Exception("Malformed template.otd configuration. Only the key was provided: '" + context + "'.")
                             End If
+                        Else
+                            Throw New System.Exception("Malformed template.otd configuration. The key wasn't provided: '" + context + "'.")
                         End If
                     End If
                 Next
@@ -63,10 +67,20 @@ Class OTemplate
             Next
 
             If Not tConfiguration.ContainsKey("definition") Then
-                Throw New System.Exception("Tag definition doesn't exist.")
+                Throw New System.Exception("Malformed template.otd configuration. The 'definition' section wasn't found.")
+            Else
+                Dim k As Integer
+                Try
+                    For k = 0 To tConfiguration("definition").Count() - 1
+                        Dim regex As String = tConfiguration("definition")(tConfiguration("definition").Keys.ElementAt(k))
+                        Dim testRegex As New Regex(regex)
+                    Next
+                Catch ex As Exception
+                    Throw New System.Exception("Malformed RegEx in template.otd: " + tConfiguration("definition").Keys.ElementAt(k) + ". RegEx parser: " + ex.Message)
+                End Try
             End If
         Else
-            Throw New System.Exception("Template definition template.otd doesn't exist.")
+            Throw New System.Exception("Main template config file 'template.otd' doesn't exist.")
         End If
     End Sub
 
@@ -78,7 +92,6 @@ Class OTemplate
                 Dim OTT As StreamReader = New StreamReader(f, Encoding.UTF8)
                 content = OTT.ReadToEnd()
 
-                'Variables especiales convertidas a texto
                 content = content.Replace("{VERSION}", OrionDocs.orionDocsVersion)
                 content = content.Replace("{BUILD}", OrionDocs.orionDocsBuild)
                 content = content.Replace("{PROJECT_TITLE}", OrionDocs.templateConfiguration("DEFAULT_PROJECT_TITLE"))
@@ -101,21 +114,22 @@ Class OTemplate
     End Function
 
     Public Function GetTagRegex(ByVal tagName As String) As String
-        If configExists("definition") Then
-            Dim s As Dictionary(Of String, String) = Me.tConfiguration("definition")
-            Return s(tagName)
+        If ConfigExists("definition") Then
+            Return Me.tConfiguration("definition")(tagName)
         End If
         Return ""
     End Function
 
     Public Function GetTemplate(ByVal templateName As String) As String
-        Return Me.tagTemplate(templateName)
+        If ContainsTemplate(templateName) Then
+            Return Me.tagTemplate(templateName)
+        End If
+        Return ""
     End Function
 
     Public Function ContainsDefinition(ByVal tagName As String) As Boolean
-        If configExists("definition") Then
-            Dim s As Dictionary(Of String, String) = Me.tConfiguration("definition")
-            Return s.ContainsKey(tagName)
+        If ConfigExists("definition") Then
+            Return Me.tConfiguration("definition").ContainsKey(tagName)
         End If
         Return False
     End Function
@@ -125,9 +139,8 @@ Class OTemplate
     End Function
 
     Public Function GetConfig(ByVal section As String, ByVal keyName As String) As String
-        If configExists(section) Then
-            Dim s As Dictionary(Of String, String) = Me.tConfiguration(section)
-            If s.ContainsKey(keyName) Then Return s(keyName)
+        If ConfigExists(section) Then
+            If Me.tConfiguration(section).ContainsKey(keyName) Then Return Me.tConfiguration(section)(keyName)
         End If
         Return ""
     End Function
@@ -140,9 +153,9 @@ Class OTemplate
         Dim myBlockTemplate As String = ""
 
         If template <> "" Then
-            myBlockTemplate = getTagTemplate(block.getTag(0), template)
+            myBlockTemplate = GetTagTemplate(block.GetTag(0), template)
         Else
-            myBlockTemplate = getTagTemplate(block.getTag(0))
+            myBlockTemplate = GetTagTemplate(block.GetTag(0))
         End If
 
         Dim searchTags As Regex = New Regex("{(@\w+)}")
@@ -150,15 +163,12 @@ Class OTemplate
 
         For i = 0 To myTags.Count - 1
             Dim tagReplacement As String = ""
-            For j = 0 To block.Count() - 1
-                If block.getTag(j).GetName = myTags(i).Groups(1).ToString() Then
-                    tagReplacement += GetTagTemplate(block.getTag(j))
-                End If
-            Next
+            Dim tagIndex As Integer = block.ContainsTag(myTags(i).Groups(1).ToString())
+            If tagIndex > -1 Then tagReplacement = GetTagTemplate(block.GetTag(tagIndex))
             myBlockTemplate = myBlockTemplate.Replace(
-                        myTags(i).Groups(0).ToString(),
-                        tagReplacement
-                    )
+                myTags(i).Groups(0).ToString(),
+                tagReplacement
+            )
         Next
 
         Return myBlockTemplate
@@ -175,13 +185,13 @@ Class OTemplate
 
         Dim searchGroups As Regex
         Dim myMatches As MatchCollection
-        Dim specialRegexes = New Dictionary(Of String, String)
+        Dim specialRegexes = New SortedDictionary(Of String, String)
         Dim ele As KeyValuePair(Of String, String)
         Dim replaceBy As String = ""
         Dim groupValue As String = ""
 
         '#FUNCIONES ESPECIALES DENTRO DEL TEMPLATE
-        specialRegexes.Add("tagvalue", "{(\d+)}")
+        specialRegexes.Add("groupvalue", "{(\d+)}")
         specialRegexes.Add("tolower", "{\s*tolower\(\s*(.+)\s*\)\s*}")
         specialRegexes.Add("toupper", "{\s*toupper\(\s*(.+)\s*\)\s*}")
         specialRegexes.Add("padleft", "{\s*padleft\(\s*(.+),\s*(\d+),\s*(.+)\)\s*}")
@@ -196,14 +206,14 @@ Class OTemplate
 
         For i = 0 To specialRegexes.Count - 1
             ele = specialRegexes.ElementAt(i)
-            searchGroups = New Regex(ele.Value, RegexOptions.IgnoreCase)
+            searchGroups = New Regex(ele.Value, RegexOptions.IgnoreCase + RegexOptions.Singleline)
             myMatches = searchGroups.Matches(myTemplate)
 
             For j = 0 To myMatches.Count - 1
                 replaceBy = ""
                 groupValue = myMatches(j).Groups(1).ToString()
                 Select Case ele.Key.ToString()
-                    Case "tagvalue"
+                    Case "groupvalue"
                         replaceBy = tag.GetGroup(
                                         Convert.ToInt32(
                                             groupValue

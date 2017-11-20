@@ -10,7 +10,6 @@ C:\Users\Víctor\Documents\Visual Studio 2013\Projects\OrionDocs\OrionDocs\obj\D
 C:\Users\Víctor\Documents\Visual Studio 2013\Projects\OrionDocs\OrionDocs\bin\Debug\OrionDocs.pdb
 C:\Users\Víctor\Documents\Visual Studio 2013\Projects\OrionDocs\OrionDocs\bin\Debug\OrionDocs.xml
 C:\Users\Víctor\Documents\Visual Studio 2013\Projects\OrionDocs\OrionDocs\obj\Debug\OrionDocs.vbprojResolveAssemblyReference.cache
-C:\Users\Víctor\Documents\Visual Studio 2017\Projects\OrionDocs\OrionDocs\obj\Debug\OrionDocs.vbprojResolveAssemblyReference.cache
 C:\Users\Víctor\Documents\Visual Studio 2017\Projects\OrionDocs\OrionDocs\obj\Debug\OrionDocs.vbproj.GenerateResource.Cache
 C:\Users\Víctor\Documents\Visual Studio 2017\Projects\OrionDocs\OrionDocs\obj\Debug\OrionDocs.exe
 C:\Users\Víctor\Documents\Visual Studio 2017\Projects\OrionDocs\OrionDocs\obj\Debug\OrionDocs.xml

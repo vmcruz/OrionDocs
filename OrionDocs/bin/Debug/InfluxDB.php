@@ -16,7 +16,7 @@
 			@contact vmcruz16@gmail.com
 			@created 22/04/2016
 			@updated 27/04/2016
-			@sourcecode {code:31-44}
+			@sourcecode {sourcecode:31,44}
 		*/
 		private $host;
 		private $port;
@@ -51,7 +51,7 @@
 			@param {String} precision - La precisión que se desea utilizar en los queries
 			@example Ej. Especificar precisión en segundos ~ $influx = new InfluxDB("estaciones", "umidev", "desarrollo123", "localhost");
 			<b>$influx->setPrecision("s")</b>;
-			@sourcecode {code:56-60}
+			@sourcecode {sourcecode:56,60}
 		*/
 		public function setPrecision($precision = false) {
 			if($precision) {
@@ -68,7 +68,7 @@
 			@example Ej. Seleccionar todos los datos de la variable "cpu" ~ $result = <b>$influx->query("select * from cpu")</b>;
 			@returns {Boolean} <i>False</i> Cuando un error ocurre
 			@returns {Array[]} Arreglo asociativo de los valores devueltos por InfluxDB
-			@sourcecode {code:73-115}
+			@sourcecode {sourcecode:73,115}
 		*/
 		public function query($query = false, $pretty = false) {
 			if($query) {
@@ -129,7 +129,7 @@
 			}
 			@returns {Boolean} <i>False</i> Cuando un error ocurre
 			@returns {Array[]} Arreglo asociativo con los datos de los puntos de todas las medidas seleccionadas
-			@sourcecode {code:134-170}
+			@sourcecode {sourcecode:134,170}
 		*/
 		public function getPoints($result = false) {
 			if($result) {
@@ -175,7 +175,7 @@
 			@exposure public
 			@returns {Boolean} "False" Cuando un error ocurre
 			@returns {Boolean} "True" Si se realizó la inserción correctamente
-			@sourcecode {code:179-228}
+			@sourcecode {sourcecode:179,228}
 		*/
 		public function write($measurement) {
 			if($measurement instanceof Measurement) {
@@ -233,7 +233,7 @@
 			@method InfluxDB.getErrCode
 			@exposure public
 			@returns {Integer} El código del error
-			@sourcecode {code:237-239}
+			@sourcecode {sourcecode:237,239}
 		*/
 		public function getErrCode() {
 			return $this->errno;
@@ -244,7 +244,7 @@
 			@method InfluxDB.getErrMessage
 			@exposure public
 			@returns {String} El mensaje del error
-			@sourcecode {code:248-250}
+			@sourcecode {sourcecode:248,250}
 		*/
 		public function getErrMessage() {
 			return $this->errstr;
@@ -255,7 +255,7 @@
 			@method InfluxDB.getErrType
 			@exposure public
 			@returns {String} El tipo del error. Los tipos devueltos son: "lib", propio de la librería; "curl", error de ejecución de curl; "influxdb", error de InfluxDB
-			@sourcecode {code:259-261}
+			@sourcecode {sourcecode:259,261}
 		*/
 		public function getErrType() {
 			return $this->errtype;
@@ -266,7 +266,7 @@
 			@method InfluxDB.lastError
 			@exposure public
 			@returns {String} Mensaje de error generado
-			@sourcecode {code:270-273}
+			@sourcecode {sourcecode:270,273}
 		*/
 		public function lastError() {
 			return "[" . self::getErrType() . "] Error #" . self::getErrCode() . ": " . self::getErrMessage();
