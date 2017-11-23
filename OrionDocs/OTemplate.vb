@@ -92,11 +92,6 @@ Class OTemplate
                 Dim OTT As StreamReader = New StreamReader(f, Encoding.UTF8)
                 content = OTT.ReadToEnd()
 
-                content = content.Replace("{VERSION}", OrionDocs.orionDocsVersion)
-                content = content.Replace("{BUILD}", OrionDocs.orionDocsBuild)
-                content = content.Replace("{PROJECT_TITLE}", OrionDocs.templateConfiguration("DEFAULT_PROJECT_TITLE"))
-                content = content.Replace("{FILE_EXTENSION}", OrionDocs.templateConfiguration("FILE_EXTENSION"))
-
                 Dim name As String = Path.GetFileName(f).Replace(".ott", "")
                 OTT.Close()
 

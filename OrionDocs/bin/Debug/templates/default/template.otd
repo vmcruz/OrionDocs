@@ -42,7 +42,7 @@
 	copydir: css + fa + js + prism
 	firstline: @description
 	fileext: .html
-	title: Reference
+	title: {FILENAME}
 #END_SECTION
 
 #You can add custom configuration here.

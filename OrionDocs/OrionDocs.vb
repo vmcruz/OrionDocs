@@ -30,6 +30,14 @@ Module OrionDocs
     Sub Main()
         Dim argv As String() = Environment.GetCommandLineArgs()
         Dim argc As Integer = argv.Count
+        Dim GUID As String = New Guid(
+                        CType(My.Application.GetType.Assembly.GetCustomAttributes(
+                            GetType(Runtime.InteropServices.GuidAttribute),
+                            False
+                        )(0),
+                            Runtime.InteropServices.GuidAttribute).Value
+                    ).ToString
+
         Console.OutputEncoding = System.Text.Encoding.Unicode
         If argc - 1 > 0 Then
             If argv(1).Substring(0, 1) = "-" Then
@@ -50,15 +58,34 @@ Module OrionDocs
                     Console.WriteLine("░ ░ ░ ▒    ░░   ░  ▒ ░░ ░ ░ ▒     ░   ░ ░  ░ ░  ░ ░ ░ ░ ▒  ░        ░  ░  ░")
                     Console.WriteLine("    ░ ░     ░      ░      ░ ░           ░    ░        ░ ░  ░ ░            ░  ")
                     Console.WriteLine("                                           ░               ░                 ")
-                    Console.WriteLine("v" + orionDocsVersion + " @ " + orionDocsBuild + " Copyright Víctor Cruz - 2017")
+                    Console.WriteLine("v" + orionDocsVersion + " @ " + orionDocsBuild + " Víctor Cruz - 2017")
+                ElseIf argv(1).ToLower = "--unhook" Then
+                    Try
+                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("*\shell\{" + GUID + "}")
+                    Catch ex As Exception
+                        MsgBox(ex.Message, vbCritical)
+                    End Try
                 Else
-                    Console.WriteLine("OrionDocs: Unkown command.")
+                    Console.WriteLine("OrionDocs Err: Unknown command")
                 End If
             Else
                 CompileProject(argv)
             End If
         Else
-            ShowHelp()
+            Try
+                My.Computer.Registry.SetValue("HKEY_CLASSES_ROOT\*\shell\{" + GUID + "}", "ExtendedSubCommandsKey", "*\shell\{" + GUID + "}")
+                My.Computer.Registry.SetValue("HKEY_CLASSES_ROOT\*\shell\{" + GUID + "}", "Icon", Process.GetCurrentProcess().MainModule.FileName + ",0")
+                My.Computer.Registry.SetValue("HKEY_CLASSES_ROOT\*\shell\{" + GUID + "}", "MUIVerb", "OrionDocs")
+                My.Computer.Registry.SetValue("HKEY_CLASSES_ROOT\*\shell\{" + GUID + "}\shell", "", "")
+
+                My.Computer.Registry.SetValue("HKEY_CLASSES_ROOT\*\shell\{" + GUID + "}\shell\Compile", "", "")
+                My.Computer.Registry.SetValue("HKEY_CLASSES_ROOT\*\shell\{" + GUID + "}\shell\Compile", "MUIVerb", "Compile with defaults")
+                My.Computer.Registry.SetValue("HKEY_CLASSES_ROOT\*\shell\{" + GUID + "}\shell\Compile\command", "", Process.GetCurrentProcess().MainModule.FileName + " %1!")
+
+                My.Computer.Registry.SetValue("HKEY_CLASSES_ROOT\*\shell\{" + GUID + "}\shell\Separator", "", "")
+            Catch ex As Exception
+                MsgBox(ex.Message, vbCritical)
+            End Try
         End If
         End
     End Sub
@@ -103,7 +130,8 @@ Module OrionDocs
         End If
 
         If isDebug Then
-            fs = New FileStream("Debug" & Format(Now, "hh.mm.ss") & ".log", FileMode.Create)
+            Randomize()
+            fs = New FileStream("Debug" & Format(Now, "hh.mm.ss.fff") & "_" & (CInt(Math.Ceiling(Rnd() * 1000000)) + 1).ToString() + ".log", FileMode.Create)
             sw = New StreamWriter(fs)
             Console.SetOut(sw)
             Console.WriteLine(debugMessage)
@@ -221,7 +249,6 @@ Module OrionDocs
         Dim searchMenu As Regex = New Regex("{\s*foreachblock\s*:\s*(\w+).ott\s*}", RegexOptions.Singleline + RegexOptions.IgnoreCase)
         Dim myForEach As MatchCollection = searchMenu.Matches(mainOTT)
         Dim foreachTemplates As New Dictionary(Of String, String)
-        Dim foreachParsedTemplates As New Dictionary(Of String, String)
 
         For f = 0 To myForEach.Count - 1
             If myForEach(f).Groups.Count = 2 AndAlso oTemplate.ContainsTemplate(myForEach(f).Groups(1).ToString()) Then
@@ -231,18 +258,21 @@ Module OrionDocs
 
         Dim mergedFiles As String() = DFile.Split("+")
         Array.Sort(mergedFiles)
-        Dim oBlock As OBlock
-        Dim oBlocks As List(Of OBlock) = New List(Of OBlock)
 
         For m = 0 To mergedFiles.Count - 1
             If File.Exists(mergedFiles(m)) Then
                 Try
+                    Dim oBlock As OBlock
+                    Dim oBlocks As List(Of OBlock) = New List(Of OBlock)
+                    Dim foreachParsedTemplates As New Dictionary(Of String, String)
                     Dim f As StreamReader = New StreamReader(mergedFiles(m))
 
                     '# Cargar el contenido del archivo a documentar
                     orionDocsFileContent = f.ReadToEnd()
                     orionDocsFileSplitted = orionDocsFileContent.Split(vbCrLf)
                     orionDocsProjectFile = mergedFiles(m)
+
+                    Dim fixedProjectTitle = templateConfiguration("DEFAULT_PROJECT_TITLE").Replace("{FILENAME}", Path.GetFileName(mergedFiles(m)))
 
                     f.Close()
                     If isDebug Then Console.WriteLine("OrionDocs Inf: File '" + mergedFiles(m) + "' loaded")
@@ -325,7 +355,7 @@ Module OrionDocs
                         '#Creación de los tags de cada bloque
                         Dim tagEndsAt As Integer, tagName As String, tagContent As String
                         If params.Count > 0 Then
-                            oBlock = New OBlock()
+                            OBlock = New OBlock()
                             For j = 0 To params.Count - 1
                                 tagEndsAt = params(j).IndexOf(" ")
                                 If tagEndsAt > -1 Then
@@ -337,7 +367,7 @@ Module OrionDocs
                                         Dim match As Match = regexParam.Match(tagContent)
                                         If match.Groups.Count > 1 Then
                                             Dim oTag As OTag = New OTag(tagName, match.Groups)
-                                            oBlock.Add(oTag)
+                                            OBlock.Add(oTag)
                                         Else
                                             If isDebug Then Console.WriteLine("OrionDocs Wrn: The tag content """ + tagContent + """ doesn't match the regex (" + tagName + ") """ + oTemplate.GetTagRegex(tagName) + """. Will be ignored.")
                                             If (j = 0 AndAlso params(0).Substring(0, 1) = "@") Or (j = 1 AndAlso params(0).Substring(0, 1) <> "@") Then j = params.Count
@@ -350,21 +380,79 @@ Module OrionDocs
                                 End If
                             Next j
 
-                            If oBlock.Count() > 0 Then
+                            If OBlock.Count() > 0 Then
                                 If isFullDebug Then Console.WriteLine("OrionDocs Inf: Comment Block #" + (i + 1).ToString() + " is:")
-                                If isFullDebug Then Console.WriteLine(oBlock.ToString())
+                                If isFullDebug Then Console.WriteLine(OBlock.ToString())
 
                                 For Each pair As KeyValuePair(Of String, String) In foreachTemplates
                                     If foreachParsedTemplates.ContainsKey(pair.Key) Then
-                                        foreachParsedTemplates(pair.Key) += oTemplate.GetBlockTemplate(oBlock, pair.Value) & vbCrLf
+                                        foreachParsedTemplates(pair.Key) += oTemplate.GetBlockTemplate(OBlock, pair.Value) & vbCrLf
                                     Else
-                                        foreachParsedTemplates.Add(pair.Key, oTemplate.GetBlockTemplate(oBlock, pair.Value) & vbCrLf)
+                                        foreachParsedTemplates.Add(pair.Key, oTemplate.GetBlockTemplate(OBlock, pair.Value) & vbCrLf)
                                     End If
                                 Next
-                                oBlocks.Add(oBlock)
+                                oBlocks.Add(OBlock)
                             End If
                         End If
                     Next i
+
+                    If isOnlyDebug = False Then
+                        '# Se crea el directorio del proyecto
+                        Dim project As String = (New Regex("[^\w]+")).Replace(fixedProjectTitle, "_") 'Path.GetFileNameWithoutExtension(DFile)
+                        If Not Directory.Exists(project) Then
+                            Directory.CreateDirectory(project)
+                            If isDebug Then Console.WriteLine("OrionDocs Inf: Project directory '" + project + "' has been created.")
+                        End If
+
+                        '# Todos los bloques que sí tienen parámetros
+                        For i = 0 To oBlocks.Count - 1
+                            If oBlocks(i).GetBlockType <> "" Then
+                                Dim name As String = oBlocks(i).GetTag(0).GetGroup(0)
+                                Dim properName As String = (New Regex("[^\w]+")).Replace(name, "_")
+
+                                Dim HTML As StreamWriter = New StreamWriter(project + "\" + properName + templateConfiguration("FILE_EXTENSION"), False, Encoding.UTF8)
+                                Dim htmlContent As String = ""
+
+                                If isDebug Then Console.WriteLine("OrionDocs Inf: StreamWriter for file '" + project + "\" + properName + templateConfiguration("FILE_EXTENSION") + "' has been created.")
+
+                                htmlContent = mainOTT
+                                For Each pair As KeyValuePair(Of String, String) In foreachParsedTemplates
+                                    htmlContent = htmlContent.Replace(pair.Key, pair.Value)
+                                Next
+
+                                htmlContent = htmlContent.Replace("{VERSION}", orionDocsVersion)
+                                htmlContent = htmlContent.Replace("{BUILD}", orionDocsBuild)
+
+                                htmlContent = htmlContent.Replace("{PROJECT_TITLE}", fixedProjectTitle)
+                                htmlContent = htmlContent.Replace("{FILE_EXTENSION}", templateConfiguration("FILE_EXTENSION"))
+                                htmlContent = htmlContent.Replace("{CONTENT}", oTemplate.GetBlockTemplate(oBlocks(i)))
+
+                                HTML.Write(htmlContent)
+                                HTML.Close()
+
+                                If isDebug Then Console.WriteLine("OrionDocs Inf: StreamWriter has finished with not errors.")
+                            End If
+                        Next
+
+                        '#Checamos COPY_DIR por si hay que copiar directorios
+                        If templateConfiguration("COPY_DIR") <> "" Then
+                            Dim folders As String() = templateConfiguration("COPY_DIR").Split(New String() {"+"}, StringSplitOptions.RemoveEmptyEntries)
+                            For i = 0 To folders.Count - 1
+                                Try
+                                    My.Computer.FileSystem.CopyDirectory(themePath + "\" + folders(i).Trim(), project + "\" + folders(i).Trim(), True)
+                                    If isDebug Then Console.WriteLine("OrionDocs Inf: Dir copied from: '" + themePath + "\" + folders(i).Trim() + "' to '" + project + "\" + folders(i).Trim() + "'.")
+                                Catch e As Exception
+                                    Console.WriteLine("System Error(3) :   " + e.Message)
+                                    If isDebug Then
+                                        sw.Close()
+                                        Dim standardOutput As New StreamWriter(Console.OpenStandardOutput())
+                                        Console.SetOut(standardOutput)
+                                    End If
+                                    End
+                                End Try
+                            Next
+                        End If
+                    End If
                 Catch e As Exception
                     Console.WriteLine("System Error(2): " + e.Message)
                     If isDebug Then
@@ -384,54 +472,6 @@ Module OrionDocs
                 End
             End If
         Next m
-
-        If isOnlyDebug = False Then
-            '# Se crea el directorio del proyecto
-            Dim project As String = (New Regex("[^\w]+")).Replace(templateConfiguration("DEFAULT_PROJECT_TITLE"), "_") 'Path.GetFileNameWithoutExtension(DFile)
-            If Not Directory.Exists(project) Then
-                Directory.CreateDirectory(project)
-                If isDebug Then Console.WriteLine("OrionDocs Inf: Project directory '" + project + "' has been created.")
-            End If
-
-            '# Todos los bloques que sí tienen parámetros
-            For i = 0 To oBlocks.Count - 1
-                If oBlocks(i).GetBlockType <> "" Then
-                    Dim name As String = oBlocks(i).GetTag(0).GetGroup(0)
-                    Dim properName As String = (New Regex("[^\w]+")).Replace(name, "_")
-
-                    Dim HTML As StreamWriter = New StreamWriter(project + "\" + properName + templateConfiguration("FILE_EXTENSION"), False, Encoding.UTF8)
-                    Dim htmlContent As String = ""
-
-                    htmlContent = mainOTT
-                    For Each pair As KeyValuePair(Of String, String) In foreachParsedTemplates
-                        htmlContent = htmlContent.Replace(pair.Key, pair.Value)
-                    Next
-
-                    htmlContent = htmlContent.Replace("{CONTENT}", oTemplate.GetBlockTemplate(oBlocks(i)))
-
-                    HTML.Write(htmlContent)
-                    HTML.Close()
-                End If
-            Next
-
-            '#Checamos COPY_DIR por si hay que copiar directorios
-            If templateConfiguration("COPY_DIR") <> "" Then
-                Dim folders As String() = templateConfiguration("COPY_DIR").Split(New String() {"+"}, StringSplitOptions.RemoveEmptyEntries)
-                For i = 0 To folders.Count - 1
-                    Try
-                        My.Computer.FileSystem.CopyDirectory(themePath + "\" + folders(i).Trim(), project + "\" + folders(i).Trim(), True)
-                    Catch e As Exception
-                        Console.WriteLine("System Error(3): " + e.Message)
-                        If isDebug Then
-                            sw.Close()
-                            Dim standardOutput As New StreamWriter(Console.OpenStandardOutput())
-                            Console.SetOut(standardOutput)
-                        End If
-                        End
-                    End Try
-                Next
-            End If
-        End If
 
         If isDebug Then
             sw.Close()

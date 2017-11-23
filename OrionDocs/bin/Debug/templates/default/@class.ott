@@ -1,6 +1,6 @@
 	<div id="content">
 		<div id="top-content">
-			<span class="title" data-current="{0}"><i class="fa fa-cube fa-icon32 fa-margin10"></i>{tolower({0})} <small class="exposure-{@exposure}">{@exposure}</small></span>
+			<span class="title" data-current="{0}"><i class="fa fa-cube fa-icon32 fa-margin10"></i>{0} <small class="exposure-{@exposure}">{@exposure}</small></span>
 			<div class="fancy-btn nav-bar" style="display: block;"></div>
 		</div>
 		<div id="mid-content">
