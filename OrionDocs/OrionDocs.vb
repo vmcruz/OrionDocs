@@ -86,6 +86,7 @@ Module OrionDocs
             Catch ex As Exception
                 MsgBox(ex.Message, vbCritical)
             End Try
+            'ShowHelp()
         End If
         End
     End Sub
@@ -355,7 +356,7 @@ Module OrionDocs
                         '#Creación de los tags de cada bloque
                         Dim tagEndsAt As Integer, tagName As String, tagContent As String
                         If params.Count > 0 Then
-                            OBlock = New OBlock()
+                            oBlock = New OBlock()
                             For j = 0 To params.Count - 1
                                 tagEndsAt = params(j).IndexOf(" ")
                                 If tagEndsAt > -1 Then
@@ -363,11 +364,11 @@ Module OrionDocs
                                     tagContent = params(j).Substring(tagEndsAt + 1).Trim()
 
                                     If tagName.Length > 0 AndAlso tagContent.Length > 0 AndAlso oTemplate.ContainsDefinition(tagName) Then
-                                        Dim regexParam As Regex = New Regex(oTemplate.GetTagRegex(tagName))
+                                        Dim regexParam As Regex = New Regex(oTemplate.GetTagRegex(tagName), RegexOptions.Singleline)
                                         Dim match As Match = regexParam.Match(tagContent)
                                         If match.Groups.Count > 1 Then
                                             Dim oTag As OTag = New OTag(tagName, match.Groups)
-                                            OBlock.Add(oTag)
+                                            oBlock.Add(oTag)
                                         Else
                                             If isDebug Then Console.WriteLine("OrionDocs Wrn: The tag content """ + tagContent + """ doesn't match the regex (" + tagName + ") """ + oTemplate.GetTagRegex(tagName) + """. Will be ignored.")
                                             If (j = 0 AndAlso params(0).Substring(0, 1) = "@") Or (j = 1 AndAlso params(0).Substring(0, 1) <> "@") Then j = params.Count
@@ -380,18 +381,18 @@ Module OrionDocs
                                 End If
                             Next j
 
-                            If OBlock.Count() > 0 Then
+                            If oBlock.TagCount() > 0 Then
                                 If isFullDebug Then Console.WriteLine("OrionDocs Inf: Comment Block #" + (i + 1).ToString() + " is:")
-                                If isFullDebug Then Console.WriteLine(OBlock.ToString())
+                                If isFullDebug Then Console.WriteLine(oBlock.ToString())
 
                                 For Each pair As KeyValuePair(Of String, String) In foreachTemplates
                                     If foreachParsedTemplates.ContainsKey(pair.Key) Then
-                                        foreachParsedTemplates(pair.Key) += oTemplate.GetBlockTemplate(OBlock, pair.Value) & vbCrLf
+                                        foreachParsedTemplates(pair.Key) += oTemplate.GetBlockTemplate(oBlock, pair.Value) & vbCrLf
                                     Else
-                                        foreachParsedTemplates.Add(pair.Key, oTemplate.GetBlockTemplate(OBlock, pair.Value) & vbCrLf)
+                                        foreachParsedTemplates.Add(pair.Key, oTemplate.GetBlockTemplate(oBlock, pair.Value) & vbCrLf)
                                     End If
                                 Next
-                                oBlocks.Add(OBlock)
+                                oBlocks.Add(oBlock)
                             End If
                         End If
                     Next i

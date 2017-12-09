@@ -158,12 +158,13 @@ Class OTemplate
 
         For i = 0 To myTags.Count - 1
             Dim tagReplacement As String = ""
-            Dim tagIndex As Integer = block.ContainsTag(myTags(i).Groups(1).ToString())
-            If tagIndex > -1 Then tagReplacement = GetTagTemplate(block.GetTag(tagIndex))
+            For j = 0 To block.GetTags(myTags(i).Groups(1).ToString()).Count() - 1
+                tagReplacement += GetTagTemplate(block.GetTags(myTags(i).Groups(1).ToString())(j))
+            Next
             myBlockTemplate = myBlockTemplate.Replace(
-                myTags(i).Groups(0).ToString(),
-                tagReplacement
-            )
+                        myTags(i).Groups(0).ToString(),
+                        tagReplacement
+                    )
         Next
 
         Return myBlockTemplate
@@ -187,17 +188,17 @@ Class OTemplate
 
         '#FUNCIONES ESPECIALES DENTRO DEL TEMPLATE
         specialRegexes.Add("groupvalue", "{(\d+)}")
-        specialRegexes.Add("tolower", "{\s*tolower\(\s*(.+)\s*\)\s*}")
-        specialRegexes.Add("toupper", "{\s*toupper\(\s*(.+)\s*\)\s*}")
-        specialRegexes.Add("padleft", "{\s*padleft\(\s*(.+),\s*(\d+),\s*(.+)\)\s*}")
-        specialRegexes.Add("padright", "{\s*padright\(\s*(.+),\s*(\d+),\s*(.+)\)\s*}")
-        specialRegexes.Add("trim", "{\s*trim\(\s*(.+)\s*\)\s*}")
-        specialRegexes.Add("replace", "{\s*replace\(\s*(.+),\s*(.+),\s*(.+)\)\s*}")
-        specialRegexes.Add("substring", "{\s*substring\(\s*(.+),\s*(.+),\s*(.+)\)\s*}")
-        specialRegexes.Add("length", "{\s*length\(\s*(.+)\s*\)\s*}")
-        specialRegexes.Add("removeinvalid", "{\s*removeinvalid\(\s*(.+)\s*\)\s*}")
+        specialRegexes.Add("tolower", "{\s*tolower\(\s*(.+?)\s*\)\s*}")
+        specialRegexes.Add("toupper", "{\s*toupper\(\s*(.+?)\s*\)\s*}")
+        specialRegexes.Add("padleft", "{\s*padleft\(\s*(.+?)\s*,\s*(\d+)\s*,\s*(.+?)\)\s*}")
+        specialRegexes.Add("padright", "{\s*padright\(\s*(.+?)\s*,\s*(\d+)\s*,\s*(.+?)\)\s*}")
+        specialRegexes.Add("trim", "{\s*trim\(\s*(.+?)\s*\)\s*}")
+        specialRegexes.Add("replace", "{\s*replace\(\s*(.+?)\s*,\s*(.+?)\s*,\s*(.+?)\)\s*}")
+        specialRegexes.Add("substring", "{\s*substring\(\s*(.+?)\s*,\s*(.+?)\s*,\s*(.+?)\)\s*}")
+        specialRegexes.Add("length", "{\s*length\(\s*(.+?)\s*\)\s*}")
+        specialRegexes.Add("removeinvalid", "{\s*removeinvalid\(\s*(.+?)\s*\)\s*}")
         specialRegexes.Add("tagname", "{\s*tagname\s*}")
-        specialRegexes.Add("template", "{\s*template\.(\w+)\.(\w+)\s*}")
+        specialRegexes.Add("template", "{\s*template\.(\w+?)\.(\w+?)\s*}")
 
         For i = 0 To specialRegexes.Count - 1
             ele = specialRegexes.ElementAt(i)
@@ -225,7 +226,15 @@ Class OTemplate
                     Case "trim"
                         replaceBy = groupValue.Trim()
                     Case "replace"
-                        replaceBy = groupValue.Replace(myMatches(j).Groups(2).ToString(), myMatches(j).Groups(3).ToString())
+                        Dim m() As String = myMatches(j).Groups(2).ToString().Split("|")
+                        Dim n() As String = myMatches(j).Groups(3).ToString().Split("|")
+                        Dim k As Integer = 0
+
+                        If m.Count = n.Count Then
+                            For k = 0 To m.Count - 1
+                                replaceBy = groupValue.Replace(m(k), n(k))
+                            Next
+                        End If
                     Case "substring"
                         replaceBy = groupValue.Substring(myMatches(j).Groups(2).ToString(), myMatches(j).Groups(3).ToString())
                     Case "length"
