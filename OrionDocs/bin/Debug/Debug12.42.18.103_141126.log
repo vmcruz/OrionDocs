@@ -1,0 +1,475 @@
+OrionDocs Inf: <Full debug> mode enabled
+OrionDocs Wrn: Undefined Project Name and Template. Using "Reference" as Project Name, and @default as Template.
+OrionDocs Inf: 'default' template selected
+OrionDocs Inf: 'default' template loaded
+OrionDocs Inf: 'config' section loaded
+OrionDocs Inf: Directories: css + fa + js + prism will be copied at the end
+OrionDocs Inf: First line will be treated as @description
+OrionDocs Inf: The project files will have '.html' extension
+OrionDocs Inf: 'goto' special tag loaded from goto.ott
+OrionDocs Inf: Default project title is: '{FILENAME}'
+OrionDocs Inf: File 'C:\Users\VCTOR~1\DOCUME~1\VISUAL~2\Projects\ORIOND~1\ORIOND~1\bin\Debug\InfluxDB.php' loaded
+OrionDocs Inf: 9 comment blocks were found
+OrionDocs Inf: Working on comment block #1
+OrionDocs Inf: 16 tags were found
+OrionDocs Inf: Comment Block #1 is:
+Type: @class
+Tags: {
+	@class
+	Groups: {
+		0 = InfluxDB.__constructor
+		1 = __constructor
+		2 = __constructor
+	}
+	@description
+	Groups: {
+		0 = Permite crear una nueva instancia de InfluxDB
+		1 = Permite crear una nueva instancia de InfluxDB
+	}
+	@param
+	Groups: {
+		0 = {String} db - Base de datos a la que se desea conectar de InfluxDB
+		1 = String
+		2 = String
+		3 = db
+		4 = Base de datos a la que se desea conectar de InfluxDB
+	}
+	@param
+	Groups: {
+		0 = {String} user - Usuario de la base de datos
+		1 = String
+		2 = String
+		3 = user
+		4 = Usuario de la base de datos
+	}
+	@param
+	Groups: {
+		0 = {String} password - Contraseña del usuario de la base de datos
+		1 = String
+		2 = String
+		3 = password
+		4 = Contraseña del usuario de la base de datos
+	}
+	@param
+	Groups: {
+		0 = {String} host - Servidor donde se encuentra InfluxDB. Opcional, por defecto "localhost"
+		1 = String
+		2 = String
+		3 = host
+		4 = Servidor donde se encuentra InfluxDB. Opcional, por defecto "localhost"
+	}
+	@param
+	Groups: {
+		0 = {String} port - Puerto de la API HTTP de InfluxDB. Opcional, por defecto "8086"
+		1 = String
+		2 = String
+		3 = port
+		4 = Puerto de la API HTTP de InfluxDB. Opcional, por defecto "8086"
+	}
+	@example
+	Groups: {
+		0 = Ej. Nueva instancia de InfluxDB ~ $influx = <b>new InfluxDB("umidb", "umidev", "desarrollo123", "192.168.1.99")</b>;
+		1 = Ej. Nueva instancia de InfluxDB
+		2 = $influx = <b>new InfluxDB("umidb", "umidev", "desarrollo123", "192.168.1.99")</b>;
+	}
+	@version
+	Groups: {
+		0 = 0.3.0b
+		1 = 0.3.0b
+	}
+	@contact
+	Groups: {
+		0 = vmcruz16@gmail.com
+		1 = vmcruz16@gmail.com
+	}
+	@created
+	Groups: {
+		0 = 22/04/2016
+		1 = 22/04/2016
+	}
+	@updated
+	Groups: {
+		0 = 27/04/2016
+		1 = 27/04/2016
+	}
+	@changelog
+	Groups: {
+		0 = +30/11/2017 Víctor Cruz: Prueba de una línea agregada
+		1 = +
+		2 = 30/11/2017
+		3 = Víctor Cruz
+		4 = Prueba de una línea agregada
+	}
+	@changelog
+	Groups: {
+		0 = -30/11/2017 Víctor Cruz: Prueba de una línea eliminada
+		1 = -
+		2 = 30/11/2017
+		3 = Víctor Cruz
+		4 = Prueba de una línea eliminada
+	}
+	@changelog
+	Groups: {
+		0 = *30/11/2017 Víctor Cruz: Prueba de una línea actualizada
+		1 = *
+		2 = 30/11/2017
+		3 = Víctor Cruz
+		4 = Prueba de una línea actualizada
+	}
+	@changelog
+	Groups: {
+		0 = -30/11/2017 Víctor Cruz: Prueba de una línea eliminada
+            askdjkasjdas djka sdjka sjdka sdjka
+            descripción a sdja ksjda kwjd aksjd
+		1 = -
+		2 = 30/11/2017
+		3 = Víctor Cruz
+		4 = Prueba de una línea eliminada
+            askdjkasjdas djka sdjka sjdka sdjka
+            descripción a sdja ksjda kwjd aksjd
+	}
+}
+
+OrionDocs Inf: Working on comment block #2
+OrionDocs Inf: 5 tags were found
+OrionDocs Inf: Comment Block #2 is:
+Type: @method
+Tags: {
+	@method
+	Groups: {
+		0 = InfluxDB.setPrecision
+		1 = setPrecision
+		2 = setPrecision
+	}
+	@description
+	Groups: {
+		0 = Especifica la precisión en la que InfluxDB devolverá el timestamp en los queries. Por defecto, InfluxDB devolverá el timestamp en nanosegundos.
+Para especificar una precisión diferente consultar la documentación de InfluxDB: <a href="https://docs.influxdata.com/influxdb/v0.12/guides/querying_data/#other-options-when-querying-data" class="fancy-goto" target="_blank">InfluxDB - Other options when querying data</a>
+		1 = Especifica la precisión en la que InfluxDB devolverá el timestamp en los queries. Por defecto, InfluxDB devolverá el timestamp en nanosegundos.
+Para especificar una precisión diferente consultar la documentación de InfluxDB: <a href="https://docs.influxdata.com/influxdb/v0.12/guides/querying_data/#other-options-when-querying-data" class="fancy-goto" target="_blank">InfluxDB - Other options when querying data</a>
+	}
+	@exposure
+	Groups: {
+		0 = public
+		1 = public
+	}
+	@param
+	Groups: {
+		0 = {String} precision - La precisión que se desea utilizar en los queries
+		1 = String
+		2 = String
+		3 = precision
+		4 = La precisión que se desea utilizar en los queries
+	}
+	@example
+	Groups: {
+		0 = Ej. Especificar precisión en segundos ~ $influx = new InfluxDB("estaciones", "umidev", "desarrollo123", "localhost");
+            $influx->setPrecision("s");
+		1 = Ej. Especificar precisión en segundos
+		2 = $influx = new InfluxDB("estaciones", "umidev", "desarrollo123", "localhost");
+            $influx->setPrecision("s");
+	}
+}
+
+OrionDocs Inf: Working on comment block #3
+OrionDocs Inf: 8 tags were found
+OrionDocs Inf: Comment Block #3 is:
+Type: @method
+Tags: {
+	@method
+	Groups: {
+		0 = InfluxDB.query
+		1 = query
+		2 = query
+	}
+	@description
+	Groups: {
+		0 = Ejecuta un query en InfluxDB y devuelve el resultado del query
+		1 = Ejecuta un query en InfluxDB y devuelve el resultado del query
+	}
+	@exposure
+	Groups: {
+		0 = public
+		1 = public
+	}
+	@param
+	Groups: {
+		0 = {String} query - El query que se desea ejecutar
+		1 = String
+		2 = String
+		3 = query
+		4 = El query que se desea ejecutar
+	}
+	@param
+	Groups: {
+		0 = {Boolean} pretty - Especifica si el resultado se devuelve en un json para debuggeo o no. Opcional, por defecto "false"
+		1 = Boolean
+		2 = Boolean
+		3 = pretty
+		4 = Especifica si el resultado se devuelve en un json para debuggeo o no. Opcional, por defecto "false"
+	}
+	@example
+	Groups: {
+		0 = Ej. Seleccionar todos los datos de la variable "cpu" ~ $result = <b>$influx->query("select * from cpu")</b>;
+		1 = Ej. Seleccionar todos los datos de la variable "cpu"
+		2 = $result = <b>$influx->query("select * from cpu")</b>;
+	}
+	@returns
+	Groups: {
+		0 = {Boolean} <i>False</i> Cuando un error ocurre
+		1 = Boolean
+		2 = Boolean
+		3 = <i>False</i> Cuando un error ocurre
+	}
+	@returns
+	Groups: {
+		0 = {Array[]} Arreglo asociativo de los valores devueltos por InfluxDB
+		1 = Array[]
+		2 = Array
+		3 = Arreglo asociativo de los valores devueltos por InfluxDB
+	}
+}
+
+OrionDocs Inf: Working on comment block #4
+OrionDocs Inf: 7 tags were found
+OrionDocs Inf: Comment Block #4 is:
+Type: @method
+Tags: {
+	@method
+	Groups: {
+		0 = InfluxDB.getPoints
+		1 = getPoints
+		2 = getPoints
+	}
+	@description
+	Groups: {
+		0 = Parsea el resultado de un <a class="fancy-goto" onclick="goto('InfluxDB_query.html')">InfluxDB.query()</a> y devuelve los puntos de las tablas seleccionadas
+		1 = Parsea el resultado de un <a class="fancy-goto" onclick="goto('InfluxDB_query.html')">InfluxDB.query()</a> y devuelve los puntos de las tablas seleccionadas
+	}
+	@exposure
+	Groups: {
+		0 = public
+		1 = public
+	}
+	@param
+	Groups: {
+		0 = {InfluxDBQuery} result - El resultado de un query ejecutado
+		1 = InfluxDBQuery
+		2 = InfluxDBQuery
+		3 = result
+		4 = El resultado de un query ejecutado
+	}
+	@example
+	Groups: {
+		0 = Ej. Seleccionar todos los datos de la variable "cpu" ~ $result = $influx->query("select * from cpu, cpu2");
+if($result) {
+    $points = <b>$influx->getPoints($result)</b>;
+    $cpuPoints = $points["cpu"]; //array ([0] => array("time" => "...", "value" => "..."), [1] => array(...), ...);
+} else {
+    echo "Error " . $influx->getErrCode() . ": " . $influx->getErrMessage();
+}
+		1 = Ej. Seleccionar todos los datos de la variable "cpu"
+		2 = $result = $influx->query("select * from cpu, cpu2");
+if($result) {
+    $points = <b>$influx->getPoints($result)</b>;
+    $cpuPoints = $points["cpu"]; //array ([0] => array("time" => "...", "value" => "..."), [1] => array(...), ...);
+} else {
+    echo "Error " . $influx->getErrCode() . ": " . $influx->getErrMessage();
+}
+	}
+	@returns
+	Groups: {
+		0 = {Boolean} <i>False</i> Cuando un error ocurre
+		1 = Boolean
+		2 = Boolean
+		3 = <i>False</i> Cuando un error ocurre
+	}
+	@returns
+	Groups: {
+		0 = {Array[]} Arreglo asociativo con los datos de los puntos de todas las medidas seleccionadas
+		1 = Array[]
+		2 = Array
+		3 = Arreglo asociativo con los datos de los puntos de todas las medidas seleccionadas
+	}
+}
+
+OrionDocs Inf: Working on comment block #5
+OrionDocs Inf: 5 tags were found
+OrionDocs Inf: Comment Block #5 is:
+Type: @method
+Tags: {
+	@method
+	Groups: {
+		0 = InfluxDB.write
+		1 = write
+		2 = write
+	}
+	@description
+	Groups: {
+		0 = Escribe en la base de datos la información de una medida especificada
+		1 = Escribe en la base de datos la información de una medida especificada
+	}
+	@exposure
+	Groups: {
+		0 = public
+		1 = public
+	}
+	@returns
+	Groups: {
+		0 = {Boolean} "False" Cuando un error ocurre
+		1 = Boolean
+		2 = Boolean
+		3 = "False" Cuando un error ocurre
+	}
+	@returns
+	Groups: {
+		0 = {Boolean} "True" Si se realizó la inserción correctamente
+		1 = Boolean
+		2 = Boolean
+		3 = "True" Si se realizó la inserción correctamente
+	}
+}
+
+OrionDocs Inf: Working on comment block #6
+OrionDocs Inf: 4 tags were found
+OrionDocs Inf: Comment Block #6 is:
+Type: @method
+Tags: {
+	@method
+	Groups: {
+		0 = InfluxDB.getErrCode
+		1 = getErrCode
+		2 = getErrCode
+	}
+	@description
+	Groups: {
+		0 = Devuelve el código del último error
+		1 = Devuelve el código del último error
+	}
+	@exposure
+	Groups: {
+		0 = public
+		1 = public
+	}
+	@returns
+	Groups: {
+		0 = {Integer} El código del error
+		1 = Integer
+		2 = Integer
+		3 = El código del error
+	}
+}
+
+OrionDocs Inf: Working on comment block #7
+OrionDocs Inf: 4 tags were found
+OrionDocs Inf: Comment Block #7 is:
+Type: @method
+Tags: {
+	@method
+	Groups: {
+		0 = InfluxDB.getErrMessage
+		1 = getErrMessage
+		2 = getErrMessage
+	}
+	@description
+	Groups: {
+		0 = Devuelve el mensaje del último error
+		1 = Devuelve el mensaje del último error
+	}
+	@exposure
+	Groups: {
+		0 = public
+		1 = public
+	}
+	@returns
+	Groups: {
+		0 = {String} El mensaje del error
+		1 = String
+		2 = String
+		3 = El mensaje del error
+	}
+}
+
+OrionDocs Inf: Working on comment block #8
+OrionDocs Inf: 4 tags were found
+OrionDocs Inf: Comment Block #8 is:
+Type: @method
+Tags: {
+	@method
+	Groups: {
+		0 = InfluxDB.getErrType
+		1 = getErrType
+		2 = getErrType
+	}
+	@description
+	Groups: {
+		0 = Devuelve el tipo del último error
+		1 = Devuelve el tipo del último error
+	}
+	@exposure
+	Groups: {
+		0 = public
+		1 = public
+	}
+	@returns
+	Groups: {
+		0 = {String} El tipo del error. Los tipos devueltos son: "lib", propio de la librería; "curl", error de ejecución de curl; "influxdb", error de InfluxDB
+		1 = String
+		2 = String
+		3 = El tipo del error. Los tipos devueltos son: "lib", propio de la librería; "curl", error de ejecución de curl; "influxdb", error de InfluxDB
+	}
+}
+
+OrionDocs Inf: Working on comment block #9
+OrionDocs Inf: 4 tags were found
+OrionDocs Inf: Comment Block #9 is:
+Type: @method
+Tags: {
+	@method
+	Groups: {
+		0 = InfluxDB.lastError
+		1 = lastError
+		2 = lastError
+	}
+	@description
+	Groups: {
+		0 = Devuelve la cadena en <span class='param-type param-type-string'>String</span> del último error generado
+		1 = Devuelve la cadena en <span class='param-type param-type-string'>String</span> del último error generado
+	}
+	@exposure
+	Groups: {
+		0 = public
+		1 = public
+	}
+	@returns
+	Groups: {
+		0 = {String} Mensaje de error generado
+		1 = String
+		2 = String
+		3 = Mensaje de error generado
+	}
+}
+
+OrionDocs Inf: Project directory 'InfluxDB_php' has been created.
+OrionDocs Inf: StreamWriter for file 'InfluxDB_php\InfluxDB___constructor.html' has been created.
+OrionDocs Inf: StreamWriter has finished with not errors.
+OrionDocs Inf: StreamWriter for file 'InfluxDB_php\InfluxDB_setPrecision.html' has been created.
+OrionDocs Inf: StreamWriter has finished with not errors.
+OrionDocs Inf: StreamWriter for file 'InfluxDB_php\InfluxDB_query.html' has been created.
+OrionDocs Inf: StreamWriter has finished with not errors.
+OrionDocs Inf: StreamWriter for file 'InfluxDB_php\InfluxDB_getPoints.html' has been created.
+OrionDocs Inf: StreamWriter has finished with not errors.
+OrionDocs Inf: StreamWriter for file 'InfluxDB_php\InfluxDB_write.html' has been created.
+OrionDocs Inf: StreamWriter has finished with not errors.
+OrionDocs Inf: StreamWriter for file 'InfluxDB_php\InfluxDB_getErrCode.html' has been created.
+OrionDocs Inf: StreamWriter has finished with not errors.
+OrionDocs Inf: StreamWriter for file 'InfluxDB_php\InfluxDB_getErrMessage.html' has been created.
+OrionDocs Inf: StreamWriter has finished with not errors.
+OrionDocs Inf: StreamWriter for file 'InfluxDB_php\InfluxDB_getErrType.html' has been created.
+OrionDocs Inf: StreamWriter has finished with not errors.
+OrionDocs Inf: StreamWriter for file 'InfluxDB_php\InfluxDB_lastError.html' has been created.
+OrionDocs Inf: StreamWriter has finished with not errors.
+OrionDocs Inf: Dir copied from: 'C:\Users\Víctor\Documents\Visual Studio 2017\Projects\OrionDocs\OrionDocs\bin\Debug\templates\default\css' to 'InfluxDB_php\css'.
+OrionDocs Inf: Dir copied from: 'C:\Users\Víctor\Documents\Visual Studio 2017\Projects\OrionDocs\OrionDocs\bin\Debug\templates\default\fa' to 'InfluxDB_php\fa'.
+OrionDocs Inf: Dir copied from: 'C:\Users\Víctor\Documents\Visual Studio 2017\Projects\OrionDocs\OrionDocs\bin\Debug\templates\default\js' to 'InfluxDB_php\js'.
+OrionDocs Inf: Dir copied from: 'C:\Users\Víctor\Documents\Visual Studio 2017\Projects\OrionDocs\OrionDocs\bin\Debug\templates\default\prism' to 'InfluxDB_php\prism'.

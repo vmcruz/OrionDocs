@@ -262,8 +262,8 @@ Module OrionDocs
 
         For m = 0 To mergedFiles.Count - 1
             If File.Exists(mergedFiles(m)) Then
-                Try
-                    Dim oBlock As OBlock
+                'Try
+                Dim oBlock As OBlock
                     Dim oBlocks As List(Of OBlock) = New List(Of OBlock)
                     Dim foreachParsedTemplates As New Dictionary(Of String, String)
                     Dim f As StreamReader = New StreamReader(mergedFiles(m))
@@ -454,16 +454,16 @@ Module OrionDocs
                             Next
                         End If
                     End If
-                Catch e As Exception
-                    Console.WriteLine("System Error(2): " + e.Message)
-                    If isDebug Then
-                        sw.Close()
-                        Dim standardOutput As New StreamWriter(Console.OpenStandardOutput())
-                        Console.SetOut(standardOutput)
-                    End If
-                    End
-                End Try
-            Else
+                    'Catch e As Exception
+                    '    Console.WriteLine("System Error(2): " + e.Message)
+                    '    If isDebug Then
+                    '        sw.Close()
+                    '        Dim standardOutput As New StreamWriter(Console.OpenStandardOutput())
+                    '        Console.SetOut(standardOutput)
+                    '    End If
+                    '    End
+                    'End Try
+                    Else
                 Console.WriteLine("OrionDocs Err(2): The file '" + mergedFiles(m) + "' doesn't exist.")
                 If isDebug Then
                     sw.Close()

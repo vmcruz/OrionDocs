@@ -72,6 +72,16 @@
 					</ul>
 				</div>
 			</div>
+			<div class="paragraph" id="changelog">
+				<div class="separator">
+					<span class="subtitle"><i class="fa fa-history"></i>&nbsp;&nbsp;Changelog</span>
+				</div>
+				<div>
+					<table class="fancy-change" data-parent="changelog">
+						{@changelog}
+					</table>
+				</div>
+			</div>
 			<div class="paragraph paragraph-h" id="sourcecode">
 				{@sourcecode}
 			</div>

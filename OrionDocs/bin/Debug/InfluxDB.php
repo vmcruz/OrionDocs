@@ -16,12 +16,6 @@
 			@contact vmcruz16@gmail.com
 			@created 22/04/2016
 			@updated 27/04/2016
-			@changelog N 30/11/2017 Víctor Cruz: Prueba de una línea agregada
-			@changelog N 30/11/2017 Víctor Cruz: Prueba de una línea agregada
-			@changelog N 30/11/2017 Víctor Cruz: Prueba de una línea agregada
-			@changelog N 30/11/2017 Víctor Cruz: Prueba de una línea agregada
-			askdjkasjdas djka sdjka sjdka sdjka
-			descripción a sdja ksjda kwjd aksjd
 		*/
 		private $host;
 		private $port;

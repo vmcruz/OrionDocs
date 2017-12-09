@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
 		document.cookie = 'iscollapsed=' + isCollapsed + '; max-age=3600';
 	var isEmptyElements = ['description', 'param', 'prop', 'return', 'notice', 'warning', 'examples', 'tutorials', 'sourcecode', 'changelog'];
 	for(var i = 0; i < isEmptyElements.length; i++) {
-		var e = document.querySelector('div[data-parent="' + isEmptyElements[i] + '"]');
+		var e = document.querySelector('[data-parent="' + isEmptyElements[i] + '"]');
 		if(e) {
 			if(e.innerHTML.trim().length == 0) {
 				var parent = document.getElementById(isEmptyElements[i]);

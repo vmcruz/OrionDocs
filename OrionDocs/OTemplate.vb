@@ -5,14 +5,19 @@ Imports System.IO
 Class OTemplate
     'Private tagDefinition As Dictionary(Of String, String)
     Private tagTemplate As Dictionary(Of String, String)
-    Private tConfiguration As New Dictionary(Of String, Dictionary(Of String, String))
-    Private appPath As String = System.AppDomain.CurrentDomain.BaseDirectory()
+    Private tConfiguration As Dictionary(Of String, Dictionary(Of String, String))
+    Dim specialRegexes As SortedDictionary(Of String, String)
+    Private appPath As String
     Private themePath As String
     Private themeName As String
 
     Public Sub New(ByVal themeName As String)
         'tagDefinition = New Dictionary(Of String, String)
         tagTemplate = New Dictionary(Of String, String)
+        tConfiguration = New Dictionary(Of String, Dictionary(Of String, String))
+        specialRegexes = New SortedDictionary(Of String, String)
+        appPath = AppDomain.CurrentDomain.BaseDirectory()
+
         Me.themeName = themeName
 
         Me.themePath = appPath + "templates\" + themeName
@@ -23,6 +28,18 @@ Class OTemplate
             Dim OTD As StreamReader = New StreamReader(definition, Encoding.UTF8)
             content = OTD.ReadToEnd()
             OTD.Close()
+
+            '#FUNCIONES ESPECIALES DENTRO DEL TEMPLATE
+            specialRegexes.Add("tolower", "{\s*tolower\(\s*(.+?)\s*\)\s*}")
+            specialRegexes.Add("toupper", "{\s*toupper\(\s*(.+?)\s*\)\s*}")
+            specialRegexes.Add("padleft", "{\s*padleft\(\s*(.+?)\s*,\s*(\d+)\s*,\s*(.+?)\)\s*}")
+            specialRegexes.Add("padright", "{\s*padright\(\s*(.+?)\s*,\s*(\d+)\s*,\s*(.+?)\)\s*}")
+            specialRegexes.Add("trim", "{\s*trim\(\s*(.+?)\s*\)\s*}")
+            specialRegexes.Add("replace", "{\s*replace\(\s*(.+?)\s*,\s*(.+?)\s*,\s*(.+?)\)\s*}")
+            specialRegexes.Add("substring", "{\s*substring\(\s*(.+?)\s*,\s*(.+?)\s*,\s*(.+?)\)\s*}")
+            specialRegexes.Add("length", "{\s*length\(\s*(.+?)\s*\)\s*}")
+            specialRegexes.Add("removeinvalid", "{\s*removeinvalid\(\s*(.+?)\s*\)\s*}")
+            specialRegexes.Add("template", "{\s*template\.(\w+?)\.(\w+?)\s*}")
 
             Dim data As String = "", key As String = ""
             Dim keyValue As String()
@@ -181,85 +198,96 @@ Class OTemplate
 
         Dim searchGroups As Regex
         Dim myMatches As MatchCollection
-        Dim specialRegexes = New SortedDictionary(Of String, String)
-        Dim ele As KeyValuePair(Of String, String)
         Dim replaceBy As String = ""
         Dim groupValue As String = ""
 
-        '#FUNCIONES ESPECIALES DENTRO DEL TEMPLATE
-        specialRegexes.Add("groupvalue", "{(\d+)}")
-        specialRegexes.Add("tolower", "{\s*tolower\(\s*(.+?)\s*\)\s*}")
-        specialRegexes.Add("toupper", "{\s*toupper\(\s*(.+?)\s*\)\s*}")
-        specialRegexes.Add("padleft", "{\s*padleft\(\s*(.+?)\s*,\s*(\d+)\s*,\s*(.+?)\)\s*}")
-        specialRegexes.Add("padright", "{\s*padright\(\s*(.+?)\s*,\s*(\d+)\s*,\s*(.+?)\)\s*}")
-        specialRegexes.Add("trim", "{\s*trim\(\s*(.+?)\s*\)\s*}")
-        specialRegexes.Add("replace", "{\s*replace\(\s*(.+?)\s*,\s*(.+?)\s*,\s*(.+?)\)\s*}")
-        specialRegexes.Add("substring", "{\s*substring\(\s*(.+?)\s*,\s*(.+?)\s*,\s*(.+?)\)\s*}")
-        specialRegexes.Add("length", "{\s*length\(\s*(.+?)\s*\)\s*}")
-        specialRegexes.Add("removeinvalid", "{\s*removeinvalid\(\s*(.+?)\s*\)\s*}")
-        specialRegexes.Add("tagname", "{\s*tagname\s*}")
-        specialRegexes.Add("template", "{\s*template\.(\w+?)\.(\w+?)\s*}")
+        searchGroups = New Regex("{(\d+)}", RegexOptions.Singleline)
+        myMatches = searchGroups.Matches(myTemplate)
 
-        For i = 0 To specialRegexes.Count - 1
-            ele = specialRegexes.ElementAt(i)
-            searchGroups = New Regex(ele.Value, RegexOptions.IgnoreCase + RegexOptions.Singleline)
-            myMatches = searchGroups.Matches(myTemplate)
+        For j = 0 To myMatches.Count - 1
+            replaceBy = ""
+            groupValue = myMatches(j).Groups(1).ToString()
+            replaceBy = tag.GetGroup(Convert.ToInt32(groupValue))
 
-            For j = 0 To myMatches.Count - 1
-                replaceBy = ""
-                groupValue = myMatches(j).Groups(1).ToString()
-                Select Case ele.Key.ToString()
-                    Case "groupvalue"
-                        replaceBy = tag.GetGroup(
-                                        Convert.ToInt32(
-                                            groupValue
-                                        )
-                                    )
-                    Case "tolower"
-                        replaceBy = groupValue.ToLower()
-                    Case "toupper"
-                        replaceBy = groupValue.ToUpper()
-                    Case "padleft"
-                        replaceBy = groupValue.PadLeft(Integer.Parse(myMatches(j).Groups(2).ToString()), myMatches(j).Groups(3).ToString())
-                    Case "padright"
-                        replaceBy = groupValue.PadRight(Integer.Parse(myMatches(j).Groups(2).ToString()), myMatches(j).Groups(3).ToString())
-                    Case "trim"
-                        replaceBy = groupValue.Trim()
-                    Case "replace"
-                        Dim m() As String = myMatches(j).Groups(2).ToString().Split("|")
-                        Dim n() As String = myMatches(j).Groups(3).ToString().Split("|")
-                        Dim k As Integer = 0
-
-                        If m.Count = n.Count Then
-                            For k = 0 To m.Count - 1
-                                replaceBy = groupValue.Replace(m(k), n(k))
-                            Next
-                        End If
-                    Case "substring"
-                        replaceBy = groupValue.Substring(myMatches(j).Groups(2).ToString(), myMatches(j).Groups(3).ToString())
-                    Case "length"
-                        replaceBy = groupValue.Length
-                    Case "removeinvalid"
-                        replaceBy = (New Regex("[^\w]+")).Replace(groupValue, "_")
-                    Case "tagname"
-                        replaceBy = tag.GetName
-                    Case "template"
-                        Dim section As String = myMatches(j).Groups(1).ToString()
-                        Dim key As String = myMatches(j).Groups(2).ToString()
-                        If section <> "" AndAlso key <> "" AndAlso tConfiguration.ContainsKey(section) Then
-                            Dim t As Dictionary(Of String, String) = tConfiguration(section)
-                            If t.ContainsKey(key) Then
-                                replaceBy = t(key)
-                            End If
-                        End If
-                End Select
-
-                myTemplate = myTemplate.Replace(
-                            myMatches(j).Groups(0).ToString(),
-                            replaceBy
-                        )
-            Next
+            myTemplate = myTemplate.Replace(
+                myMatches(j).Groups(0).ToString(),
+                replaceBy
+            )
         Next
-        Return myTemplate
+
+        Return ParseSpecialRegexes(myTemplate)
+    End Function
+
+    Public Function ParseSpecialRegexes(ByVal Text As String) As String
+        Dim searchGroups As New Regex("{\s*(\w+)\s*\(\s*(.+)\s*\)\s*}", RegexOptions.IgnoreCase)
+        Dim sRegex As Regex
+        Dim myMatches As MatchCollection
+        Dim myMatch As Match
+        Dim replaceBy As String = ""
+        Dim groupValue As String = ""
+        Dim singleGroup As String = ""
+        Dim i As Integer = 0
+        Dim key As String
+
+        myMatches = searchGroups.Matches(Text)
+        If myMatches.Count > 0 Then
+            For i = 0 To myMatches.Count - 1
+                key = myMatches(i).Groups(1).ToString().Trim()
+                If specialRegexes.ContainsKey(key) Then
+                    groupValue = myMatches(i).Groups(0).ToString().Replace(myMatches(i).Groups(2).ToString(), ParseSpecialRegexes(myMatches(i).Groups(2).ToString()))
+                    sRegex = New Regex(specialRegexes(key), RegexOptions.IgnoreCase)
+                    myMatch = sRegex.Match(groupValue)
+
+                    If myMatch.Groups.Count > 0 Then
+                        singleGroup = myMatch.Groups(1).ToString()
+
+                        Select Case key
+                            Case "tolower"
+                                replaceBy = singleGroup.ToLower()
+                            Case "toupper"
+                                replaceBy = singleGroup.ToUpper()
+                            Case "padleft"
+                                replaceBy = singleGroup.PadLeft(Integer.Parse(myMatch.Groups(2).ToString()), myMatch.Groups(3).ToString())
+                            Case "padright"
+                                replaceBy = singleGroup.PadRight(Integer.Parse(myMatch.Groups(2).ToString()), myMatch.Groups(3).ToString())
+                            Case "trim"
+                                replaceBy = singleGroup.Trim()
+                            Case "replace"
+                                Dim m() As String = myMatch.Groups(2).ToString().Split("/")
+                                Dim n() As String = myMatch.Groups(3).ToString().Split("/")
+                                Dim k As Integer = 0
+
+                                If m.Count = n.Count Then
+                                    replaceBy = singleGroup
+                                    For k = 0 To m.Count - 1
+                                        replaceBy = replaceBy.Replace(m(k), n(k))
+                                    Next
+                                End If
+                            Case "substring"
+                                replaceBy = singleGroup.Substring(myMatch.Groups(2).ToString(), myMatch.Groups(3).ToString())
+                            Case "length"
+                                replaceBy = singleGroup.Length
+                            Case "removeinvalid"
+                                replaceBy = (New Regex("[^\w]+")).Replace(singleGroup, "_")
+                            Case "template"
+                                Dim section As String = myMatch.Groups(1).ToString()
+                                Dim keyt As String = myMatch.Groups(2).ToString()
+                                If section <> "" AndAlso keyt <> "" AndAlso tConfiguration.ContainsKey(section) Then
+                                    Dim t As Dictionary(Of String, String) = tConfiguration(section)
+                                    If t.ContainsKey(keyt) Then
+                                        replaceBy = t(keyt)
+                                    End If
+                                End If
+                        End Select
+                    End If
+
+                    Text = Text.Replace(
+                        myMatches(i).Groups(0).ToString(),
+                        replaceBy
+                    )
+                End If
+            Next
+        End If
+        Return Text
     End Function
 End Class

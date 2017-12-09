@@ -1,5 +1,6 @@
 						<tr>
-							<td class="change change-{tolower({1})}">{toupper({1})}</td>
+							<td class="change change-{tolower({replace({1}, +/-/*, N/D/U)})}">
+							{replace({1}, +/-/*, N/D/U)}</td>
 							<td>{2}</td>
 							<td>{3}</td>
 							<td>{4}</td>

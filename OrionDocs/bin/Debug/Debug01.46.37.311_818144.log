@@ -94,37 +94,37 @@ Tags: {
 	}
 	@changelog
 	Groups: {
-		0 = N 30/11/2017 Víctor Cruz: Prueba de una línea agregada
-		1 = N
+		0 = +30/11/2017 Víctor Cruz: Prueba de una línea agregada
+		1 = +
 		2 = 30/11/2017
 		3 = Víctor Cruz
 		4 = Prueba de una línea agregada
 	}
 	@changelog
 	Groups: {
-		0 = N 30/11/2017 Víctor Cruz: Prueba de una línea agregada
-		1 = N
+		0 = -30/11/2017 Víctor Cruz: Prueba de una línea eliminada
+		1 = -
 		2 = 30/11/2017
 		3 = Víctor Cruz
-		4 = Prueba de una línea agregada
+		4 = Prueba de una línea eliminada
 	}
 	@changelog
 	Groups: {
-		0 = N 30/11/2017 Víctor Cruz: Prueba de una línea agregada
-		1 = N
+		0 = *30/11/2017 Víctor Cruz: Prueba de una línea actualizada
+		1 = *
 		2 = 30/11/2017
 		3 = Víctor Cruz
-		4 = Prueba de una línea agregada
+		4 = Prueba de una línea actualizada
 	}
 	@changelog
 	Groups: {
-		0 = N 30/11/2017 Víctor Cruz: Prueba de una línea agregada
+		0 = -30/11/2017 Víctor Cruz: Prueba de una línea eliminada
             askdjkasjdas djka sdjka sjdka sdjka
             descripción a sdja ksjda kwjd aksjd
-		1 = N
+		1 = -
 		2 = 30/11/2017
 		3 = Víctor Cruz
-		4 = Prueba de una línea agregada
+		4 = Prueba de una línea eliminada
             askdjkasjdas djka sdjka sjdka sdjka
             descripción a sdja ksjda kwjd aksjd
 	}
@@ -450,7 +450,6 @@ Tags: {
 	}
 }
 
-OrionDocs Inf: Project directory 'InfluxDB_php' has been created.
 OrionDocs Inf: StreamWriter for file 'InfluxDB_php\InfluxDB___constructor.html' has been created.
 OrionDocs Inf: StreamWriter has finished with not errors.
 OrionDocs Inf: StreamWriter for file 'InfluxDB_php\InfluxDB_setPrecision.html' has been created.
