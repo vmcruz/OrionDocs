@@ -1,0 +1,8 @@
+					<div class="prop">
+						<div class="fancy-prop lfloat">
+							<span class="prop-type param-type-{tolower({2})}">{1}</span><span class="prop-name">{3}</span>
+						</div>
+						<div class="prop-description lfloat">
+							{4}
+						</div>
+					</div>

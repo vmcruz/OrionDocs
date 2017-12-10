@@ -9,7 +9,7 @@ Module OrionDocs
     Public patch As String = My.Application.Info.Version.Build.ToString '# Incrementar con parches
     Public revision As String = My.Application.Info.Version.Revision.ToString
     Public preRelease As String = "β" '# Modificar con cada etapa de desarrollo, actualmente beta [alpha | beta | rc (release candidate)]
-    Public buildDate As String = "2017.11.20" '# Cambiar con cada build de trabajo diaria
+    Public buildDate As String = "2017.12.10" '# Cambiar con cada build de trabajo diaria
     Public orionDocsVersion As String = major + "." + minor + "." + patch + "." + revision + preRelease
     Public orionDocsBuild As String = buildDate
 #End Region
@@ -38,7 +38,7 @@ Module OrionDocs
                             Runtime.InteropServices.GuidAttribute).Value
                     ).ToString
 
-        Console.OutputEncoding = System.Text.Encoding.Unicode
+        Console.OutputEncoding = Encoding.UTF8
         If argc - 1 > 0 Then
             If argv(1).Substring(0, 1) = "-" Then
                 If argv(1).ToLower() = "-h" Or argv(1) = "/?" Or argv(1).ToLower() = "/h" Or argv(1).ToLower() = "--help" Then
@@ -59,12 +59,6 @@ Module OrionDocs
                     Console.WriteLine("    ░ ░     ░      ░      ░ ░           ░    ░        ░ ░  ░ ░            ░  ")
                     Console.WriteLine("                                           ░               ░                 ")
                     Console.WriteLine("v" + orionDocsVersion + " @ " + orionDocsBuild + " Víctor Cruz - 2017")
-                ElseIf argv(1).ToLower = "--unhook" Then
-                    Try
-                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("*\shell\{" + GUID + "}")
-                    Catch ex As Exception
-                        MsgBox(ex.Message, vbCritical)
-                    End Try
                 Else
                     Console.WriteLine("OrionDocs Err: Unknown command")
                 End If
@@ -72,21 +66,7 @@ Module OrionDocs
                 CompileProject(argv)
             End If
         Else
-            Try
-                My.Computer.Registry.SetValue("HKEY_CLASSES_ROOT\*\shell\{" + GUID + "}", "ExtendedSubCommandsKey", "*\shell\{" + GUID + "}")
-                My.Computer.Registry.SetValue("HKEY_CLASSES_ROOT\*\shell\{" + GUID + "}", "Icon", Process.GetCurrentProcess().MainModule.FileName + ",0")
-                My.Computer.Registry.SetValue("HKEY_CLASSES_ROOT\*\shell\{" + GUID + "}", "MUIVerb", "OrionDocs")
-                My.Computer.Registry.SetValue("HKEY_CLASSES_ROOT\*\shell\{" + GUID + "}\shell", "", "")
-
-                My.Computer.Registry.SetValue("HKEY_CLASSES_ROOT\*\shell\{" + GUID + "}\shell\Compile", "", "")
-                My.Computer.Registry.SetValue("HKEY_CLASSES_ROOT\*\shell\{" + GUID + "}\shell\Compile", "MUIVerb", "Compile with defaults")
-                My.Computer.Registry.SetValue("HKEY_CLASSES_ROOT\*\shell\{" + GUID + "}\shell\Compile\command", "", Process.GetCurrentProcess().MainModule.FileName + " %1!")
-
-                My.Computer.Registry.SetValue("HKEY_CLASSES_ROOT\*\shell\{" + GUID + "}\shell\Separator", "", "")
-            Catch ex As Exception
-                MsgBox(ex.Message, vbCritical)
-            End Try
-            'ShowHelp()
+            ShowHelp()
         End If
         End
     End Sub
@@ -179,7 +159,7 @@ Module OrionDocs
             '# Cargar las definiciones y el template de los tags que usa el tema
             oTemplate = New OTemplate(themeName)
             oTemplate.LoadTemplateFiles()
-        Catch e As System.Exception
+        Catch e As Exception
             Console.WriteLine("System Error(1): " + e.Message)
             If isDebug Then
                 sw.Close()
@@ -191,7 +171,7 @@ Module OrionDocs
 
         If isDebug Then Console.WriteLine("OrionDocs Inf: '" + themeName + "' template loaded")
 
-        Dim themePath As String = System.AppDomain.CurrentDomain.BaseDirectory() + "templates\" + themeName
+        Dim themePath As String = AppDomain.CurrentDomain.BaseDirectory() + "templates\" + themeName
         Dim configExists As Boolean = False
         Dim configContent As String = ""
 
@@ -262,8 +242,8 @@ Module OrionDocs
 
         For m = 0 To mergedFiles.Count - 1
             If File.Exists(mergedFiles(m)) Then
-                'Try
-                Dim oBlock As OBlock
+                Try
+                    Dim oBlock As OBlock
                     Dim oBlocks As List(Of OBlock) = New List(Of OBlock)
                     Dim foreachParsedTemplates As New Dictionary(Of String, String)
                     Dim f As StreamReader = New StreamReader(mergedFiles(m))
@@ -298,8 +278,6 @@ Module OrionDocs
                         Dim blockContent As String() = commentBlock(i).Groups(1).ToString().Trim().Split(New String() {vbCrLf}, StringSplitOptions.RemoveEmptyEntries)
                         Dim wasFirstLineFixed As Boolean = False
                         Dim params As List(Of String) = New List(Of String)
-                        Dim indent As String = ""
-                        Dim indentTmp As String = ""
                         Dim wasMultiple As Boolean = False
 
                         For j = 0 To blockContent.Count - 1
@@ -308,17 +286,7 @@ Module OrionDocs
                             If blockContent(j).Trim() <> "" Then
                                 If Left(blockContentTrim, 1) = "@" Or j = 0 Then
                                     If wasMultiple Then
-                                        Dim realParam As String() = params(params.Count - 1).Split(vbCrLf)
-                                        params(params.Count - 1) = realParam(0)
-                                        For k = 1 To realParam.Count - 1
-                                            If realParam(k) <> "" Then
-                                                If realParam.Count > 2 Then
-                                                    params(params.Count - 1) += vbCrLf + realParam(k).Substring(indent.Length() + 1)
-                                                Else
-                                                    params(params.Count - 1) += vbCrLf + realParam(k).Trim()
-                                                End If
-                                            End If
-                                        Next
+                                        params(params.Count - 1) = FixIndent(params(params.Count - 1))
                                         wasMultiple = False
                                     End If
 
@@ -327,17 +295,17 @@ Module OrionDocs
                                         wasFirstLineFixed = True
                                     End If
 
-                                    indentTmp = blockContent(j).Replace(blockContent(j).TrimStart(), "")
-                                    indent = indentTmp
                                     params.Add(blockContentTrim)
                                 ElseIf params.Count > 0 Then
-                                    indentTmp = blockContent(j).Replace(blockContent(j).TrimStart(), "")
-                                    If indentTmp.Length < indent.Length Then indent = indentTmp
                                     params(params.Count - 1) += vbCrLf + blockContent(j)
                                     wasMultiple = True
                                 End If
                             End If
                         Next
+
+                        If wasMultiple Then
+                            params(params.Count - 1) = FixIndent(params(params.Count - 1))
+                        End If
 
                         If wasFirstLineFixed AndAlso params.Count >= 2 Then
                             Dim tmp As String = params(1)
@@ -454,16 +422,16 @@ Module OrionDocs
                             Next
                         End If
                     End If
-                    'Catch e As Exception
-                    '    Console.WriteLine("System Error(2): " + e.Message)
-                    '    If isDebug Then
-                    '        sw.Close()
-                    '        Dim standardOutput As New StreamWriter(Console.OpenStandardOutput())
-                    '        Console.SetOut(standardOutput)
-                    '    End If
-                    '    End
-                    'End Try
-                    Else
+                Catch e As Exception
+                    Console.WriteLine("System Error(2): " + e.Message)
+                    If isDebug Then
+                        sw.Close()
+                        Dim standardOutput As New StreamWriter(Console.OpenStandardOutput())
+                        Console.SetOut(standardOutput)
+                    End If
+                    End
+                End Try
+            Else
                 Console.WriteLine("OrionDocs Err(2): The file '" + mergedFiles(m) + "' doesn't exist.")
                 If isDebug Then
                     sw.Close()
@@ -494,4 +462,30 @@ Module OrionDocs
         Console.WriteLine("                  Else, OrionDocs will use 'Reference' as title.")
         Console.WriteLine("   @templateName  Specifies which template will be used. If omitted uses @default.")
     End Sub
+
+    Public Function FixIndent(ByVal Text As String) As String
+        Dim realParam As String() = Text.Split(vbCrLf)
+        Dim retText As String = ""
+
+        If realParam.Count >= 2 Then
+            Dim minIndent As String = realParam(1).Replace(realParam(1).TrimStart(), "")
+            Dim currIndent As String = ""
+
+            For i = 2 To realParam.Count - 1
+                currIndent = realParam(i).Replace(realParam(i).TrimStart(), "")
+                If currIndent.Length < minIndent.Length Then minIndent = currIndent
+            Next
+
+            retText = realParam(0)
+            For k = 1 To realParam.Count - 1
+                If realParam(k) <> "" Then
+                    retText += vbCrLf + realParam(k).Substring(minIndent.Length)
+                End If
+            Next
+        Else
+            retText = realParam(0).Trim()
+        End If
+
+        Return retText
+    End Function
 End Module
