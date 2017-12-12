@@ -16,7 +16,7 @@ Module OrionDocs
     Public patch As String = My.Application.Info.Version.Build.ToString '# Incrementar con parches
     Public revision As String = My.Application.Info.Version.Revision.ToString
     Public preRelease As String = "β" '# Modificar con cada etapa de desarrollo, actualmente beta [alpha | beta | rc (release candidate)]
-    Public buildDate As String = "2017.12.10" '# Cambiar con cada build de trabajo diaria
+    Public buildDate As String = "2017.12.11" '# Cambiar con cada build de trabajo diaria
     Public orionDocsVersion As String = major + "." + minor + "." + patch + "." + revision + preRelease
     Public orionDocsBuild As String = buildDate
 #End Region
