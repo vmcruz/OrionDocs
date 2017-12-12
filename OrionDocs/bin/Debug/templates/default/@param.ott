@@ -1,8 +1,0 @@
-					<div class="param">
-						<div class="fancy-param lfloat">
-							<span class="param-type param-type-{tolower({2})}">{1}</span><span class="param-name">{3}</span>
-						</div>
-						<div class="param-description lfloat">
-							{4}
-						</div>
-					</div>

@@ -1,8 +1,15 @@
 ﻿Imports System.IO
 Imports System.Text
 Imports System.Text.RegularExpressions
+Imports System.Windows.Forms
 
 Module OrionDocs
+    'Para ocultar la consola
+    Private Declare Auto Function GetConsoleWindow Lib "kernel32.dll" () As IntPtr
+    Private Declare Auto Function ShowWindow Lib "user32.dll" (ByVal hWnd As IntPtr, ByVal nCmdShow As Integer) As Boolean
+    Private Const SW_HIDE As Integer = 0
+    Private Const SW_SHOW As Integer = 5
+
 #Region "Variables de version"
     Public major As String = My.Application.Info.Version.Major.ToString '# Incrementar con grandes cambios que no son compatibles con la versión previa
     Public minor As String = My.Application.Info.Version.Minor.ToString '# Incrementar con nuevas características, compatibles con la versión previa
@@ -19,6 +26,7 @@ Module OrionDocs
     Public orionDocsFileSplitted As String()
     Public orionDocsProjectFile As String = ""
     Public templateConfiguration As Dictionary(Of String, String)
+    Private debugFile As String = ""
 #End Region
 
 #Region "Descripción de las extensiones de archivo"
@@ -30,6 +38,8 @@ Module OrionDocs
     Sub Main()
         Dim argv As String() = Environment.GetCommandLineArgs()
         Dim argc As Integer = argv.Count
+        Dim hWndConsole As Integer
+        hWndConsole = GetConsoleWindow()
         Dim GUID As String = New Guid(
                         CType(My.Application.GetType.Assembly.GetCustomAttributes(
                             GetType(Runtime.InteropServices.GuidAttribute),
@@ -38,9 +48,8 @@ Module OrionDocs
                             Runtime.InteropServices.GuidAttribute).Value
                     ).ToString
 
-        Console.OutputEncoding = Encoding.UTF8
         If argc - 1 > 0 Then
-            If argv(1).Substring(0, 1) = "-" Then
+            If argv(1).Substring(0, 1) = "-" Or argv(1).Substring(0, 1) = "/" Then
                 If argv(1).ToLower() = "-h" Or argv(1) = "/?" Or argv(1).ToLower() = "/h" Or argv(1).ToLower() = "--help" Then
                     ShowHelp()
                 ElseIf argv(1).ToLower() = "-v" Or argv(1).ToLower() = "/v" Or argv(1).ToLower() = "/#" Or argv(1).ToLower() = "--version" Then
@@ -59,6 +68,15 @@ Module OrionDocs
                     Console.WriteLine("    ░ ░     ░      ░      ░ ░           ░    ░        ░ ░  ░ ░            ░  ")
                     Console.WriteLine("                                           ░               ░                 ")
                     Console.WriteLine("v" + orionDocsVersion + " @ " + orionDocsBuild + " Víctor Cruz - 2017")
+                ElseIf argv(1).ToLower = "--config" Then
+                    If hWndConsole <> IntPtr.Zero Then
+                        ' Hide the console window...
+                        ShowWindow(hWndConsole, SW_HIDE)
+                        Dim c As New frmConfig
+                        c.ShowDialog()
+                        'ShowWindow(hWndConsole, SW_SHOW)
+                        End
+                    End If
                 Else
                     Console.WriteLine("OrionDocs Err: Unknown command")
                 End If
@@ -80,10 +98,10 @@ Module OrionDocs
         '#Configuración en caso de que no se encuentre el archivo @template.otc
         templateConfiguration = New Dictionary(Of String, String)
         templateConfiguration.Add("COPY_DIR", "")
-        templateConfiguration.Add("FIRST_LINE", "@description")
-        templateConfiguration.Add("FILE_EXTENSION", ".html")
-        templateConfiguration.Add("GOTO_REDIR", "<a href='{PROPERURL}.{FILE_EXTENSION}#{PROPERURL}'>{URL}</a>")
-        templateConfiguration.Add("DEFAULT_PROJECT_TITLE", "Reference")
+        templateConfiguration.Add("FIRST_LINE", My.Settings.FirstLine)
+        templateConfiguration.Add("FILE_EXTENSION", My.Settings.FileExtension)
+        templateConfiguration.Add("GOTO_REDIR", My.Settings.GotoRedir)
+        templateConfiguration.Add("DEFAULT_PROJECT_TITLE", My.Settings.DefaultTitle)
 
         '# Nombre del archivo
         Dim DFile As String = argv(1)
@@ -92,38 +110,48 @@ Module OrionDocs
         Dim isOnlyDebug As Boolean = False
 
         '# Habilitar el debug agregando ? al nombre del archivo a documentar, útil para ver cómo está obteniendo los grupos
-        Dim debugMessage As String = ""
+
         If Right(DFile, 1) = "?" Then
             isDebug = True
             DFile = DFile.Replace("?", "")
-            debugMessage = "OrionDocs Inf: <Debug> mode enabled"
+            Debug("OrionDocs Inf: <Debug> mode enabled")
         ElseIf Right(DFile, 1) = "!" Then
             isDebug = True
             isFullDebug = True
             DFile = DFile.Replace("!", "")
-            debugMessage = "OrionDocs Inf: <Full debug> mode enabled"
+            Debug("OrionDocs Inf: <Full debug> mode enabled")
         ElseIf Right(DFile, 1) = "#" Then
             isDebug = True
             isFullDebug = True
             isOnlyDebug = True
             DFile = DFile.Replace("#", "")
-            debugMessage = "OrionDocs Inf: <Only full debug> mode enabled."
-        End If
-
-        If isDebug Then
-            Randomize()
-            fs = New FileStream("Debug" & Format(Now, "hh.mm.ss.fff") & "_" & (CInt(Math.Ceiling(Rnd() * 1000000)) + 1).ToString() + ".log", FileMode.Create)
-            sw = New StreamWriter(fs)
-            Console.SetOut(sw)
-            Console.WriteLine(debugMessage)
+            Debug("OrionDocs Inf: <Only full debug> mode enabled.")
         End If
 
         '# Nombre del tema a usar, si no existe usar @default
-        Dim themeName As String = "default"
-        Dim theme As String = "@default"
+        Dim themeName As String = My.Settings.DefaultTemplate
+        Dim theme As String = "@" + My.Settings.DefaultTemplate
         Dim projectTitleArg As Boolean = False
 
         If argc >= 3 Then
+            If argv(2).Substring(0, 1) = "?" Then
+                argv(2) = InputBox("Enter the name of the template:", "Template Name", "@default")
+                If argv(2).Length > 0 Then
+                    If argv(2).Substring(0, 1) <> "@" Then
+                        argv(2) = "@" + argv(2)
+                    End If
+                Else
+                    argv(2) = "@default"
+                End If
+            End If
+
+            If argc = 4 AndAlso argv(3).Substring(0, 1) = "?" Then
+                argv(3) = InputBox("Enter the title of the project:", "Project Title", "{FILENAME}")
+                If argv(3).Length = 0 Then
+                    argv(3) = "{FILENAME}"
+                End If
+            End If
+
             If argv(2).Substring(0, 1) = "@" AndAlso argv(2).Length > 1 Then
                 theme = argv(2)
                 If argc = 4 Then
@@ -137,30 +165,24 @@ Module OrionDocs
                     If argv(3).Substring(0, 1) = "@" AndAlso argv(3).Length > 1 Then
                         theme = argv(3)
                     Else
-                        Console.WriteLine("OrionDocs Err(1): Don't know how to handle '" + argv(3) + "' instruction. Try --help.")
-                        If isDebug Then
-                            sw.Close()
-                            Dim standardOutput As New StreamWriter(Console.OpenStandardOutput())
-                            Console.SetOut(standardOutput)
-                        End If
-                        End
+                        Debug("OrionDocs Err(1): Don't know how to handle '" + argv(3) + "' instruction, will be ignored. Try --help.")
                     End If
                 End If
             End If
         Else
-            If isDebug Then Console.WriteLine("OrionDocs Wrn: Undefined Project Name and Template. Using ""Reference"" as Project Name, and @default as Template.")
+            If isDebug Then Debug("OrionDocs Wrn: Undefined Project Name and Template. Using ""Reference"" as Project Name, and @default as Template.")
         End If
 
         themeName = theme.Substring(1)
 
-        If isDebug Then Console.WriteLine("OrionDocs Inf: '" + themeName + "' template selected")
+        If isDebug Then Debug("OrionDocs Inf: '" + themeName + "' template selected")
         Dim oTemplate As OTemplate
         Try
             '# Cargar las definiciones y el template de los tags que usa el tema
             oTemplate = New OTemplate(themeName)
             oTemplate.LoadTemplateFiles()
         Catch e As Exception
-            Console.WriteLine("System Error(1): " + e.Message)
+            Debug("System Error(1): " + e.Message)
             If isDebug Then
                 sw.Close()
                 Dim standardOutput As New StreamWriter(Console.OpenStandardOutput())
@@ -169,7 +191,7 @@ Module OrionDocs
             End
         End Try
 
-        If isDebug Then Console.WriteLine("OrionDocs Inf: '" + themeName + "' template loaded")
+        If isDebug Then Debug("OrionDocs Inf: '" + themeName + "' template loaded")
 
         Dim themePath As String = AppDomain.CurrentDomain.BaseDirectory() + "templates\" + themeName
         Dim configExists As Boolean = False
@@ -177,50 +199,50 @@ Module OrionDocs
 
         If oTemplate.ConfigExists("config") Then
             configExists = True
-            If isDebug Then Console.WriteLine("OrionDocs Inf: 'config' section loaded")
+            If isDebug Then Debug("OrionDocs Inf: 'config' section loaded")
 
             If oTemplate.GetConfig("config", "copydir").Length > 0 Then
                 templateConfiguration("COPY_DIR") = oTemplate.GetConfig("config", "copydir")
-                If isDebug Then Console.WriteLine("OrionDocs Inf: Directories: " + templateConfiguration("COPY_DIR") + " will be copied at the end")
+                If isDebug Then Debug("OrionDocs Inf: Directories: " + templateConfiguration("COPY_DIR") + " will be copied at the end")
             Else
-                If isDebug Then Console.WriteLine("OrionDocs Wrn: 'copydir' config is not set. No directories will be copied")
+                If isDebug Then Debug("OrionDocs Wrn: 'copydir' config is not set. No directories will be copied")
             End If
 
             If oTemplate.GetConfig("config", "firstline").Length > 0 Then
                 templateConfiguration("FIRST_LINE") = oTemplate.GetConfig("config", "firstline")
-                If isDebug Then Console.WriteLine("OrionDocs Inf: First line will be treated as " + templateConfiguration("FIRST_LINE"))
+                If isDebug Then Debug("OrionDocs Inf: First line will be treated as " + templateConfiguration("FIRST_LINE"))
             Else
-                If isDebug Then Console.WriteLine("OrionDocs Wrn: 'firstline' config is not set. Using the default: '" + templateConfiguration("FIRST_LINE") + "'")
+                If isDebug Then Debug("OrionDocs Wrn: 'firstline' config is not set. Using the default: '" + templateConfiguration("FIRST_LINE") + "'")
             End If
 
             If oTemplate.GetConfig("config", "fileext").Length > 0 Then
                 templateConfiguration("FILE_EXTENSION") = oTemplate.GetConfig("config", "fileext")
-                If isDebug Then Console.WriteLine("OrionDocs Inf: The project files will have '" + templateConfiguration("FILE_EXTENSION") + "' extension")
+                If isDebug Then Debug("OrionDocs Inf: The project files will have '" + templateConfiguration("FILE_EXTENSION") + "' extension")
             Else
-                If isDebug Then Console.WriteLine("OrionDocs Wrn: 'fileext' config is not set. Using the default: '" + templateConfiguration("FILE_EXTENSION") + "'")
+                If isDebug Then Debug("OrionDocs Wrn: 'fileext' config is not set. Using the default: '" + templateConfiguration("FILE_EXTENSION") + "'")
             End If
 
             If oTemplate.ContainsTemplate("goto") Then
                 templateConfiguration("GOTO_REDIR") = oTemplate.GetTemplate("goto")
-                If isDebug Then Console.WriteLine("OrionDocs Inf: 'goto' special tag loaded from goto.ott")
+                If isDebug Then Debug("OrionDocs Inf: 'goto' special tag loaded from goto.ott")
             Else
-                If isDebug Then Console.WriteLine("OrionDocs Wrn: 'goto.ott' file doesn't exist. Using the default goto special tag template: '" + templateConfiguration("GOTO_REDIR") + "'")
+                If isDebug Then Debug("OrionDocs Wrn: 'goto.ott' file doesn't exist. Using the default goto special tag template: '" + templateConfiguration("GOTO_REDIR") + "'")
             End If
 
             If Not projectTitleArg Then
                 If oTemplate.GetConfig("config", "title").Length > 0 Then
-                    If templateConfiguration("DEFAULT_PROJECT_TITLE") = "Reference" Then
+                    If templateConfiguration("DEFAULT_PROJECT_TITLE") = "{FILENAME}" Then
                         templateConfiguration("DEFAULT_PROJECT_TITLE") = oTemplate.GetConfig("config", "title")
                     End If
-                    If isDebug Then Console.WriteLine("OrionDocs Inf: Default project title is: '" + templateConfiguration("DEFAULT_PROJECT_TITLE") + "'")
+                    If isDebug Then Debug("OrionDocs Inf: Default project title is: '" + templateConfiguration("DEFAULT_PROJECT_TITLE") + "'")
                 Else
-                    If isDebug Then Console.WriteLine("OrionDocs Wrn: 'title' config is not set. Using the default: '" + templateConfiguration("DEFAULT_PROJECT_TITLE") + "'")
+                    If isDebug Then Debug("OrionDocs Wrn: 'title' config is not set. Using the default: '" + templateConfiguration("DEFAULT_PROJECT_TITLE") + "'")
                 End If
             Else
-                If isDebug Then Console.WriteLine("OrionDocs Inf: Project title set to: '" + templateConfiguration("DEFAULT_PROJECT_TITLE") + "'")
+                If isDebug Then Debug("OrionDocs Inf: Project title set to: '" + templateConfiguration("DEFAULT_PROJECT_TITLE") + "'")
             End If
         Else
-            If isDebug Then Console.WriteLine("OrionDocs Wrn: 'config' section doesn't exist in '" + themeName + ".otc'. Default values will be used.")
+            If isDebug Then Debug("OrionDocs Wrn: 'config' section doesn't exist in '" + themeName + ".otc'. Default values will be used.")
         End If
 
         '# Template principal, esqueleto para colocar el contenido de los tags
@@ -253,10 +275,10 @@ Module OrionDocs
                     orionDocsFileSplitted = orionDocsFileContent.Split(vbCrLf)
                     orionDocsProjectFile = mergedFiles(m)
 
-                    Dim fixedProjectTitle = templateConfiguration("DEFAULT_PROJECT_TITLE").Replace("{FILENAME}", Path.GetFileName(mergedFiles(m)))
+                    Dim fixedProjectTitle = templateConfiguration("DEFAULT_PROJECT_TITLE").Replace("{FILENAME}", Path.GetFileNameWithoutExtension(mergedFiles(m)))
 
                     f.Close()
-                    If isDebug Then Console.WriteLine("OrionDocs Inf: File '" + mergedFiles(m) + "' loaded")
+                    If isDebug Then Debug("OrionDocs Inf: File '" + mergedFiles(m) + "' loaded")
 
                     '# Obtener los bloques
                     Dim regexBlocks As Regex = New Regex("/\*\*(.+?)\*/", RegexOptions.Singleline)
@@ -265,16 +287,16 @@ Module OrionDocs
 
                     If isDebug Then
                         If commentBlock.Count = 1 Then
-                            Console.WriteLine("OrionDocs Inf: 1 comment block was found")
+                            Debug("OrionDocs Inf: 1 comment block was found")
                         Else
-                            Console.WriteLine("OrionDocs Inf: " + commentBlock.Count.ToString() + " comment blocks were found")
+                            Debug("OrionDocs Inf: " + commentBlock.Count.ToString() + " comment blocks were found")
                         End If
                     End If
 
                     '# Cargar cada bloque de comentarios individualmente, con sus parámetros
                     '# Solo se cargan aquellos bloques que tengan al menos un parámetro
                     For i = 0 To commentBlock.Count - 1
-                        If isDebug Then Console.WriteLine("OrionDocs Inf: Working on comment block #" + (i + 1).ToString())
+                        If isDebug Then Debug("OrionDocs Inf: Working on comment block #" + (i + 1).ToString())
                         Dim blockContent As String() = commentBlock(i).Groups(1).ToString().Trim().Split(New String() {vbCrLf}, StringSplitOptions.RemoveEmptyEntries)
                         Dim wasFirstLineFixed As Boolean = False
                         Dim params As List(Of String) = New List(Of String)
@@ -315,9 +337,9 @@ Module OrionDocs
 
                         If isDebug Then
                             If params.Count = 1 Then
-                                Console.WriteLine("OrionDocs Inf: 1 tag was found")
+                                Debug("OrionDocs Inf: 1 tag was found")
                             Else
-                                Console.WriteLine("OrionDocs Inf: " + params.Count.ToString() + " tags were found")
+                                Debug("OrionDocs Inf: " + params.Count.ToString() + " tags were found")
                             End If
                         End If
 
@@ -338,20 +360,20 @@ Module OrionDocs
                                             Dim oTag As OTag = New OTag(tagName, match.Groups)
                                             oBlock.Add(oTag)
                                         Else
-                                            If isDebug Then Console.WriteLine("OrionDocs Wrn: The tag content """ + tagContent + """ doesn't match the regex (" + tagName + ") """ + oTemplate.GetTagRegex(tagName) + """. Will be ignored.")
+                                            If isDebug Then Debug("OrionDocs Wrn: The tag content """ + tagContent + """ doesn't match the regex (" + tagName + ") """ + oTemplate.GetTagRegex(tagName) + """. Will be ignored.")
                                             If (j = 0 AndAlso params(0).Substring(0, 1) = "@") Or (j = 1 AndAlso params(0).Substring(0, 1) <> "@") Then j = params.Count
                                         End If
                                     Else
-                                        If isDebug Then Console.WriteLine("OrionDocs Wrn: The tag definition for tag """ + tagName + """ doesn't exist. Will be ignored.")
+                                        If isDebug Then Debug("OrionDocs Wrn: The tag definition for tag """ + tagName + """ doesn't exist. Will be ignored.")
                                     End If
                                 Else
-                                    If isDebug Then Console.WriteLine("OrionDocs Wrn: Invalid tag format for """ + params(j) + """. Will be ignored.")
+                                    If isDebug Then Debug("OrionDocs Wrn: Invalid tag format for """ + params(j) + """. Will be ignored.")
                                 End If
                             Next j
 
                             If oBlock.TagCount() > 0 Then
-                                If isFullDebug Then Console.WriteLine("OrionDocs Inf: Comment Block #" + (i + 1).ToString() + " is:")
-                                If isFullDebug Then Console.WriteLine(oBlock.ToString())
+                                If isFullDebug Then Debug("OrionDocs Inf: Comment Block #" + (i + 1).ToString() + " is:")
+                                If isFullDebug Then Debug(oBlock.ToString())
 
                                 For Each pair As KeyValuePair(Of String, String) In foreachTemplates
                                     If foreachParsedTemplates.ContainsKey(pair.Key) Then
@@ -365,12 +387,12 @@ Module OrionDocs
                         End If
                     Next i
 
-                    If isOnlyDebug = False Then
+                    If isOnlyDebug = False AndAlso commentBlock.Count > 0 Then
                         '# Se crea el directorio del proyecto
                         Dim project As String = (New Regex("[^\w]+")).Replace(fixedProjectTitle, "_") 'Path.GetFileNameWithoutExtension(DFile)
                         If Not Directory.Exists(project) Then
                             Directory.CreateDirectory(project)
-                            If isDebug Then Console.WriteLine("OrionDocs Inf: Project directory '" + project + "' has been created.")
+                            If isDebug Then Debug("OrionDocs Inf: Project directory '" + project + "' has been created.")
                         End If
 
                         '# Todos los bloques que sí tienen parámetros
@@ -382,7 +404,7 @@ Module OrionDocs
                                 Dim HTML As StreamWriter = New StreamWriter(project + "\" + properName + templateConfiguration("FILE_EXTENSION"), False, Encoding.UTF8)
                                 Dim htmlContent As String = ""
 
-                                If isDebug Then Console.WriteLine("OrionDocs Inf: StreamWriter for file '" + project + "\" + properName + templateConfiguration("FILE_EXTENSION") + "' has been created.")
+                                If isDebug Then Debug("OrionDocs Inf: StreamWriter for file '" + project + "\" + properName + templateConfiguration("FILE_EXTENSION") + "' has been created.")
 
                                 htmlContent = mainOTT
                                 For Each pair As KeyValuePair(Of String, String) In foreachParsedTemplates
@@ -399,7 +421,7 @@ Module OrionDocs
                                 HTML.Write(htmlContent)
                                 HTML.Close()
 
-                                If isDebug Then Console.WriteLine("OrionDocs Inf: StreamWriter has finished with not errors.")
+                                If isDebug Then Debug("OrionDocs Inf: StreamWriter has finished with not errors.")
                             End If
                         Next
 
@@ -409,56 +431,40 @@ Module OrionDocs
                             For i = 0 To folders.Count - 1
                                 Try
                                     My.Computer.FileSystem.CopyDirectory(themePath + "\" + folders(i).Trim(), project + "\" + folders(i).Trim(), True)
-                                    If isDebug Then Console.WriteLine("OrionDocs Inf: Dir copied from: '" + themePath + "\" + folders(i).Trim() + "' to '" + project + "\" + folders(i).Trim() + "'.")
+                                    If isDebug Then Debug("OrionDocs Inf: Dir copied from: '" + themePath + "\" + folders(i).Trim() + "' to '" + project + "\" + folders(i).Trim() + "'.")
                                 Catch e As Exception
-                                    Console.WriteLine("System Error(3) :   " + e.Message)
-                                    If isDebug Then
-                                        sw.Close()
-                                        Dim standardOutput As New StreamWriter(Console.OpenStandardOutput())
-                                        Console.SetOut(standardOutput)
-                                    End If
-                                    End
+                                    Debug("System Error(3) :   " + e.Message)
                                 End Try
                             Next
                         End If
                     End If
                 Catch e As Exception
-                    Console.WriteLine("System Error(2): " + e.Message)
-                    If isDebug Then
-                        sw.Close()
-                        Dim standardOutput As New StreamWriter(Console.OpenStandardOutput())
-                        Console.SetOut(standardOutput)
-                    End If
-                    End
+                    Debug("System Error(2): " + e.Message)
                 End Try
             Else
-                Console.WriteLine("OrionDocs Err(2): The file '" + mergedFiles(m) + "' doesn't exist.")
-                If isDebug Then
-                    sw.Close()
-                    Dim standardOutput As New StreamWriter(Console.OpenStandardOutput())
-                    Console.SetOut(standardOutput)
-                End If
-                End
+                Debug("OrionDocs Err(2): The file '" + mergedFiles(m) + "' doesn't exist.")
+            End If
+
+            If isDebug AndAlso My.Settings.SaveDebug Then
+                fs = New FileStream(Path.GetFileName(mergedFiles(m)) + ".log", FileMode.Create)
+                sw = New StreamWriter(fs)
+                sw.Write(debugFile)
+                sw.Close()
+                fs.Close()
             End If
         Next m
-
-        If isDebug Then
-            sw.Close()
-            Dim standardOutput As New StreamWriter(Console.OpenStandardOutput())
-            Console.SetOut(standardOutput)
-        End If
     End Sub
 
     Public Sub ShowHelp()
         Console.WriteLine(vbCrLf + "OrionDocs v" + orionDocsVersion + " - Víctor Cruz 2017")
-        Console.WriteLine("Usage: " + Path.GetFileName(Process.GetCurrentProcess().MainModule.FileName).Replace(".exe", "") + " thefile[+file2+file3...][?|!|#] [""Title""] [@templateName]")
-        Console.WriteLine("   thefile        The file to be processed.")
+        Console.WriteLine("Usage: " + Path.GetFileName(Process.GetCurrentProcess().MainModule.FileName).Replace(".exe", "") + " file[+file2+file3...][?|!|#] [""Title""] [@templateName]")
+        Console.WriteLine("   file           The file to be processed.")
         Console.WriteLine("                     > Appending + and another filename will add it to the documentation.")
         Console.WriteLine("                       Do not leave blank spaces between the filenames.")
         Console.WriteLine("                     > Appending ? enables basic debug mode.")
         Console.WriteLine("                     > Appending ! enables full debug mode.")
         Console.WriteLine("                     > Appending # enables only full debug mode. Project files are not created.")
-        Console.WriteLine("   ""Title""      Sets the project title. If not it will use the title defined in template.otd(config.default_project_title).")
+        Console.WriteLine("   ""Title""        Sets the project title. If not it will use the title defined in template.otd(config.default_project_title).")
         Console.WriteLine("                  Else, OrionDocs will use 'Reference' as title.")
         Console.WriteLine("   @templateName  Specifies which template will be used. If omitted uses @default.")
     End Sub
@@ -488,4 +494,8 @@ Module OrionDocs
 
         Return retText
     End Function
+
+    Private Sub Debug(ByVal Text As String)
+        debugFile += Format(Now, "hh:mm:ss.fff") + " | " + Text + vbCrLf
+    End Sub
 End Module

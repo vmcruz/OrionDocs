@@ -126,6 +126,7 @@
 			}
 			@returns {Boolean} <i>False</i> Cuando un error ocurre
 			@returns {Array[]} Arreglo asociativo con los datos de los puntos de todas las medidas seleccionadas
+			@sourcecode {sourcecode: 131, 167}
 		*/
 		public function getPoints($result = false) {
 			if($result) {

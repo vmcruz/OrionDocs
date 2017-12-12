@@ -1,1 +1,0 @@
-<a class="fancy-goto" onclick="goto('{PROPERURL}{FILE_EXTENSION}')">{METHOD_NAME}()</a>

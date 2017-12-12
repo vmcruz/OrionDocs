@@ -1,7 +1,24 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" UseMySettingsClassName="true">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="My" GeneratedClassName="MySettings" UseMySettingsClassName="true">
+  <Profiles />
+  <Settings>
+    <Setting Name="DefaultTemplate" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Fancy</Value>
+    </Setting>
+    <Setting Name="DefaultTitle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{FILENAME}</Value>
+    </Setting>
+    <Setting Name="SaveDebug" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="FirstLine" Type="System.String" Scope="User">
+      <Value Profile="(Default)">@description</Value>
+    </Setting>
+    <Setting Name="FileExtension" Type="System.String" Scope="User">
+      <Value Profile="(Default)">.html</Value>
+    </Setting>
+    <Setting Name="GotoRedir" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;a href='{PROPERURL}.{FILE_EXTENSION}#{PROPERURL}'&gt;{URL}&lt;/a&gt;</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>

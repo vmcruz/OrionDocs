@@ -1,8 +1,0 @@
-					<div class="return">
-						<div class="fancy-return lfloat">
-							<span class="return-type param-type-{tolower({2})}">{1}</span>
-						</div>
-						<div class="return-description lfloat">
-							{3}
-						</div>
-					</div>

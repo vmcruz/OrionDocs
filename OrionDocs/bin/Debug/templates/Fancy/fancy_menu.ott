@@ -1,0 +1,1 @@
+{ name : "{0}", url : "{removeinvalid({0})}{FILE_EXTENSION}" },

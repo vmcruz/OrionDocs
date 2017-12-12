@@ -53,6 +53,78 @@ Namespace My
                 Return defaultInstance
             End Get
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Fancy")>  _
+        Public Property DefaultTemplate() As String
+            Get
+                Return CType(Me("DefaultTemplate"),String)
+            End Get
+            Set
+                Me("DefaultTemplate") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("{FILENAME}")>  _
+        Public Property DefaultTitle() As String
+            Get
+                Return CType(Me("DefaultTitle"),String)
+            End Get
+            Set
+                Me("DefaultTitle") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property SaveDebug() As Boolean
+            Get
+                Return CType(Me("SaveDebug"),Boolean)
+            End Get
+            Set
+                Me("SaveDebug") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("@description")>  _
+        Public Property FirstLine() As String
+            Get
+                Return CType(Me("FirstLine"),String)
+            End Get
+            Set
+                Me("FirstLine") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute(".html")>  _
+        Public Property FileExtension() As String
+            Get
+                Return CType(Me("FileExtension"),String)
+            End Get
+            Set
+                Me("FileExtension") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("<a href='{PROPERURL}.{FILE_EXTENSION}#{PROPERURL}'>{URL}</a>")>  _
+        Public Property GotoRedir() As String
+            Get
+                Return CType(Me("GotoRedir"),String)
+            End Get
+            Set
+                Me("GotoRedir") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
