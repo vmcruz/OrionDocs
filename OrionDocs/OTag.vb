@@ -1,5 +1,4 @@
 ﻿Imports System.Text.RegularExpressions
-Imports System.IO
 
 Class OTag
     Private Name As String
@@ -69,27 +68,34 @@ Class OTag
                                 code
                             )
                 Else
-                    Throw New System.Exception("Can't find this lines in the file: " + startLine.ToString() + " - " + endLine.ToString())
+                    Dim ex As New Exception("Can't find this lines in the file: " + startLine.ToString() + " - " + endLine.ToString())
+                    ex.Data.Add("Source", "OTag:36")
+                    Throw ex
                 End If
             Next
-            Me.Groups.Add(theData)
+            Me.Groups.Add(theData.Replace(",", "͵"))
         Next
     End Sub
 
     Public Function GetGroup(ByVal index As Integer) As String
-        Return Me.Groups(index)
+        If index > Groups.Count - 1 Then
+            Dim ex As New Exception("Group index {" + index.ToString() + "} is not part of tag " + Name)
+            ex.Data.Add("Source", "OTag:81")
+            Throw ex
+            Return ""
+        End If
+        Return Groups(index)
     End Function
 
     Public Function GetName() As String
-        Return Me.Name
+        Return Name
     End Function
 
     Public Overrides Function ToString() As String
-        Dim ret As String = vbTab + Me.Name + vbCrLf + vbTab + "Groups: {" + vbCrLf
+        Dim ret As String = vbTab + Name + vbCrLf + vbTab + "Groups: {" + vbCrLf
 
-        For i = 0 To Me.Groups.Count - 1
-            Dim groupData As String = Me.Groups(i).ToString()
-            ret += vbTab + vbTab + i.ToString() + " = " + Me.Groups(i) + vbCrLf
+        For i = 0 To Groups.Count - 1
+            ret += vbTab + vbTab + i.ToString() + " = " + Groups(i).Replace("͵", ",") + vbCrLf
         Next
 
         ret += vbTab + "}" + vbCrLf

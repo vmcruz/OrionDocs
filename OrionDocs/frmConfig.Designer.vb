@@ -28,7 +28,7 @@ Partial Class frmConfig
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tbpTemplate = New System.Windows.Forms.TabPage()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.lblCopyright = New System.Windows.Forms.Label()
+        Me.lblLang = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.lblWeb = New System.Windows.Forms.LinkLabel()
         Me.Label11 = New System.Windows.Forms.Label()
@@ -99,7 +99,7 @@ Partial Class frmConfig
         '
         'GroupBox1
         '
-        Me.GroupBox1.Controls.Add(Me.lblCopyright)
+        Me.GroupBox1.Controls.Add(Me.lblLang)
         Me.GroupBox1.Controls.Add(Me.Label12)
         Me.GroupBox1.Controls.Add(Me.lblWeb)
         Me.GroupBox1.Controls.Add(Me.Label11)
@@ -118,22 +118,22 @@ Partial Class frmConfig
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Information"
         '
-        'lblCopyright
+        'lblLang
         '
-        Me.lblCopyright.AutoSize = True
-        Me.lblCopyright.Location = New System.Drawing.Point(85, 117)
-        Me.lblCopyright.Name = "lblCopyright"
-        Me.lblCopyright.Size = New System.Drawing.Size(0, 13)
-        Me.lblCopyright.TabIndex = 11
+        Me.lblLang.AutoSize = True
+        Me.lblLang.Location = New System.Drawing.Point(85, 117)
+        Me.lblLang.Name = "lblLang"
+        Me.lblLang.Size = New System.Drawing.Size(0, 13)
+        Me.lblLang.TabIndex = 11
         '
         'Label12
         '
         Me.Label12.AutoSize = True
-        Me.Label12.Location = New System.Drawing.Point(25, 117)
+        Me.Label12.Location = New System.Drawing.Point(21, 117)
         Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(54, 13)
+        Me.Label12.Size = New System.Drawing.Size(58, 13)
         Me.Label12.TabIndex = 10
-        Me.Label12.Text = "Copyright:"
+        Me.Label12.Text = "Language:"
         '
         'lblWeb
         '
@@ -221,6 +221,7 @@ Partial Class frmConfig
         '
         'lstTemplate
         '
+        Me.lstTemplate.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.lstTemplate.Location = New System.Drawing.Point(6, 6)
         Me.lstTemplate.Name = "lstTemplate"
         Me.lstTemplate.Size = New System.Drawing.Size(295, 130)
@@ -372,6 +373,6 @@ Partial Class frmConfig
     Friend WithEvents lblName As Windows.Forms.Label
     Friend WithEvents Label2 As Windows.Forms.Label
     Friend WithEvents lstTemplate As Windows.Forms.ListView
-    Friend WithEvents lblCopyright As Windows.Forms.Label
+    Friend WithEvents lblLang As Windows.Forms.Label
     Friend WithEvents Label12 As Windows.Forms.Label
 End Class

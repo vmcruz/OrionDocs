@@ -4,6 +4,7 @@ Imports System.Windows.Forms
 
 Public Class frmConfig
     Private templateList As List(Of OTemplate)
+    Private templateFolder As List(Of String)
     Private selectedListIndex As Integer
 
     Private Sub frmConfig_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -18,6 +19,7 @@ Public Class frmConfig
         Try
             Dim templates As String() = Directory.GetDirectories(Application.StartupPath + "\templates\")
             templateList = New List(Of OTemplate)
+            templateFolder = New List(Of String)
             Dim templateImgList As New ImageList()
             templateImgList.ImageSize = New Size(150, 100)
             lstTemplate.Clear()
@@ -27,9 +29,14 @@ Public Class frmConfig
             For Each template As String In templates
                 Dim templateTmp As New OTemplate(template.Replace(Application.StartupPath + "\templates\", ""))
                 If templateTmp.GetConfig("info", "name") <> "" Then
-                    Dim templateItem As New ListViewItem With {
-                        .Text = templateTmp.GetConfig("info", "name")
-                    }
+                    Dim templateItem As New ListViewItem()
+                    Dim langText As String = ""
+
+                    If templateTmp.GetConfig("info", "language").Length > 0 Then
+                        langText = " (" + templateTmp.GetConfig("info", "language") + ")"
+                    End If
+
+                    templateItem.Text = templateTmp.GetConfig("info", "name") + langText
 
                     If templateTmp.GetConfig("info", "screenshot") <> "" Then
                         templateImgList.Images.Add(templateTmp.GetConfig("info", "name"), Bitmap.FromFile(template + "\" + templateTmp.GetConfig("info", "screenshot")))
@@ -38,6 +45,7 @@ Public Class frmConfig
 
                     lstTemplate.Items.Add(templateItem)
                     templateList.Add(templateTmp)
+                    templateFolder.Add(template.Replace(Application.StartupPath + "\templates\", ""))
 
                     If templateTmp.GetConfig("info", "name") = My.Settings.DefaultTemplate Then
                         selectedListIndex = templateList.Count - 1
@@ -45,12 +53,12 @@ Public Class frmConfig
                 End If
             Next
 
-
             If lstTemplate.Items.Count > 0 Then
                 FocusLstView()
             End If
         Catch ex As Exception
             MsgBox(ex.GetType().ToString + ": " + ex.Message, MsgBoxStyle.Critical, "Error loading template list")
+            End
         End Try
     End Sub
 
@@ -88,13 +96,13 @@ Public Class frmConfig
                 lblWeb.Text = ""
             End If
 
-            If info.GetConfig("info", "copyright") <> "" Then
-                lblCopyright.Text = info.GetConfig("info", "copyright")
+            If info.GetConfig("info", "language") <> "" Then
+                lblLang.Text = info.GetConfig("info", "language")
             Else
-                lblCopyright.Text = ""
+                lblLang.Text = ""
             End If
         Else
-            lblCopyright.Text = ""
+            lblLang.Text = ""
             lblWeb.Text = ""
             lblContact.Text = ""
             lblAuthor.Text = ""
@@ -106,9 +114,8 @@ Public Class frmConfig
 
     Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
         If selectedListIndex > -1 Then
-            Dim info As OTemplate = templateList(selectedListIndex)
             With My.Settings
-                .DefaultTemplate = info.GetConfig("info", "name")
+                .DefaultTemplate = templateFolder(selectedListIndex)
                 .DefaultTitle = txtTitle.Text
                 .GotoRedir = txtGoto.Text
                 .FirstLine = txtFirstLine.Text
@@ -129,7 +136,7 @@ Public Class frmConfig
 
     Private Sub btnRestore_Click(sender As Object, e As EventArgs) Handles btnRestore.Click
         txtTitle.Text = "{FILENAME}"
-        txtGoto.Text = ""
+        txtGoto.Text = "<a href='{PROPERURL}.{FILE_EXTENSION}#{PROPERURL}'>{URL}</a>"
         txtFirstLine.Text = "@description"
         txtExtension.Text = ".html"
         chkDebug.Checked = True

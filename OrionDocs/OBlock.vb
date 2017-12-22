@@ -1,6 +1,4 @@
-﻿Imports System.Text.RegularExpressions
-
-Class OBlock
+﻿Class OBlock
     Private tags As List(Of OTag)
     Private tagDict As Dictionary(Of String, List(Of OTag))
 

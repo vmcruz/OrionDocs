@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="DefaultTemplate" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Fancy</Value>
+      <Value Profile="(Default)">Fancy_en</Value>
     </Setting>
     <Setting Name="DefaultTitle" Type="System.String" Scope="User">
       <Value Profile="(Default)">{FILENAME}</Value>
@@ -19,6 +19,9 @@
     </Setting>
     <Setting Name="GotoRedir" Type="System.String" Scope="User">
       <Value Profile="(Default)">&lt;a href='{PROPERURL}.{FILE_EXTENSION}#{PROPERURL}'&gt;{URL}&lt;/a&gt;</Value>
+    </Setting>
+    <Setting Name="BlockTypes" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{ALL}</Value>
     </Setting>
   </Settings>
 </SettingsFile>

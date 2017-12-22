@@ -5,7 +5,17 @@
 	class InfluxDB {
 		/**
 			Permite crear una nueva instancia de InfluxDB
-			@class InfluxDB.__constructor
+			@class InfluxDB.__construct
+			
+			@prop {private String} host - Servidor al que InfluxDB debe conectarse (dirección ip o nombre de dominio)
+			@prop {private Integer} port - Puerto al que se ha de conectar
+			@prop {private String} user - Usuario que se usa para la conexión
+			@prop {private String} password - Contraseña de acceso
+			@prop {private String} db - Base de datos a la que InfluxDB se conecta
+			@prop {private Integer} errno - Indica el código de error generado, en caso de que lo hubiera
+			@prop {private String} errstr - Indica el mensaje de error generado, en caso de que lo hubiera
+			@prop {private String} errtype - Indica el tipo de error generado (librería, curl o servidor), en caso de que lo hubiera
+			@prop {private String} precision - Almacena la precisión con la que InfluxDB representará el tiempo (timestamp)			
 			@param {String} db - Base de datos a la que se desea conectar de InfluxDB
 			@param {String} user - Usuario de la base de datos
 			@param {String} password - Contraseña del usuario de la base de datos
@@ -16,6 +26,8 @@
 			@contact vmcruz16@gmail.com
 			@created 22/04/2016
 			@updated 27/04/2016
+			@sourcecode {sourcecode:32,55}
+			
 		*/
 		private $host;
 		private $port;
@@ -49,7 +61,8 @@
 			@exposure public
 			@param {String} precision - La precisión que se desea utilizar en los queries
 			@example Ej. Especificar precisión en segundos ~ $influx = new InfluxDB("estaciones", "umidev", "desarrollo123", "localhost");
-			$influx->setPrecision("s");
+			<b>$influx->setPrecision("s")</b>;
+			@sourcecode {sourcecode:67,71}
 		*/
 		public function setPrecision($precision = false) {
 			if($precision) {
@@ -66,6 +79,7 @@
 			@example Ej. Seleccionar todos los datos de la variable "cpu" ~ $result = <b>$influx->query("select * from cpu")</b>;
 			@returns {Boolean} <i>False</i> Cuando un error ocurre
 			@returns {Array[]} Arreglo asociativo de los valores devueltos por InfluxDB
+			@sourcecode {sourcecode:84,126}
 		*/
 		public function query($query = false, $pretty = false) {
 			if($query) {
@@ -126,7 +140,7 @@
 			}
 			@returns {Boolean} <i>False</i> Cuando un error ocurre
 			@returns {Array[]} Arreglo asociativo con los datos de los puntos de todas las medidas seleccionadas
-			@sourcecode {sourcecode: 131, 167}
+			@sourcecode {sourcecode:145,181}
 		*/
 		public function getPoints($result = false) {
 			if($result) {
@@ -172,6 +186,7 @@
 			@exposure public
 			@returns {Boolean} "False" Cuando un error ocurre
 			@returns {Boolean} "True" Si se realizó la inserción correctamente
+			@sourcecode {sourcecode:191,240}
 		*/
 		public function write($measurement) {
 			if($measurement instanceof Measurement) {
@@ -229,6 +244,7 @@
 			@method InfluxDB.getErrCode
 			@exposure public
 			@returns {Integer} El código del error
+			@sourcecode {sourcecode:249,251}
 		*/
 		public function getErrCode() {
 			return $this->errno;
@@ -239,6 +255,7 @@
 			@method InfluxDB.getErrMessage
 			@exposure public
 			@returns {String} El mensaje del error
+			@sourcecode {sourcecode:260,262}
 		*/
 		public function getErrMessage() {
 			return $this->errstr;
@@ -249,6 +266,7 @@
 			@method InfluxDB.getErrType
 			@exposure public
 			@returns {String} El tipo del error. Los tipos devueltos son: "lib", propio de la librería; "curl", error de ejecución de curl; "influxdb", error de InfluxDB
+			@sourcecode {sourcecode:271,273}
 		*/
 		public function getErrType() {
 			return $this->errtype;
@@ -259,6 +277,7 @@
 			@method InfluxDB.lastError
 			@exposure public
 			@returns {String} Mensaje de error generado
+			@sourcecode {sourcecode:282,284}
 		*/
 		public function lastError() {
 			return "[" . self::getErrType() . "] Error #" . self::getErrCode() . ": " . self::getErrMessage();
