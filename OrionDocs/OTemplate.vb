@@ -195,7 +195,7 @@ Class OTemplate
                     Try
                         tagReplacement += tag.GetGroup(Convert.ToInt32(myTags(i).Groups(2).ToString())).Replace(vbCr, "").Replace(vbLf, "")
                     Catch e As Exception
-                        Dim ex As New Exception("Is not possible to convert '" + myTags(i).Groups(2).ToString() + "' to Int32")
+                        Dim ex As New Exception("It is not possible to convert '" + myTags(i).Groups(2).ToString() + "' to Int32")
                         ex.Data.Add("Source", "OTemplate:196")
                         Throw ex
                     End Try
