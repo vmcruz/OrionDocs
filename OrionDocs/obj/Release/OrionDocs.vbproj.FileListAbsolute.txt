@@ -18,4 +18,3 @@ C:\Users\Víctor\Documents\Visual Studio 2017\Projects\OrionDocs\OrionDocs\obj\R
 C:\Users\Víctor\Documents\Visual Studio 2017\Projects\OrionDocs\OrionDocs\obj\Release\OrionDocs.exe
 C:\Users\Víctor\Documents\Visual Studio 2017\Projects\OrionDocs\OrionDocs\obj\Release\OrionDocs.xml
 C:\Users\Víctor\Documents\Visual Studio 2017\Projects\OrionDocs\OrionDocs\obj\Release\OrionDocs.pdb
-C:\Users\Víctor\Documents\Visual Studio 2017\Projects\OrionDocs\OrionDocs\obj\Release\OrionDocs.vbprojResolveAssemblyReference.cache

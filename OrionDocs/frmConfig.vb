@@ -8,6 +8,9 @@ Public Class frmConfig
     Private selectedListIndex As Integer
 
     Private Sub frmConfig_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        lblAbout.Text = "OrionDocs v" + orionDocsVersion + " (c) by Víctor Cruz" & vbCrLf & vbCrLf
+        lblAbout.Text += "OrionDocs v" + orionDocsVersion + " Is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License." & vbCrLf & vbCrLf
+        lblAbout.Text += "You should have received a copy of the license along with this work. If not, see <http://creativecommons.org/licenses/by-nc-nd/4.0/>."
         txtTitle.Text = My.Settings.DefaultTitle
         txtFirstLine.Text = My.Settings.FirstLine
         txtGoto.Text = My.Settings.GotoRedir

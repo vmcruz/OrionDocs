@@ -1,5 +1,5 @@
 #define MyAppName "OrionDocs"
-#define MyAppVersion "0.17.2.1b"
+#define MyAppVersion "0.17.2.6ß"
 #define MyAppPublisher "Víctor Cruz"
 #define MyAppExeName "OrionDocs.exe"
 #define GUID "D3EABBBA-0BF7-409B-B133-FEC0058B0913"
@@ -12,7 +12,7 @@ AppPublisher={#MyAppPublisher}
 DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 OutputDir=C:\Users\Víctor\Documents\Visual Studio 2017\Projects\OrionDocs
-OutputBaseFilename=setup
+OutputBaseFilename=OrionDocs_v0.17.2.6b
 Compression=lzma
 SolidCompression=yes
 UninstallDisplayIcon={app}\{#MyAppExeName},0
@@ -20,7 +20,7 @@ UninstallDisplayName={#MyAppName} v{#MyAppVersion}
 WizardSmallImageFile=ODocsInno.bmp
 
 [Languages]
-Name: "english"; MessagesFile: "compiler:Default.isl"
+Name: "english"; MessagesFile: "compiler:Default.isl"; LicenseFile: "ccl-4.0-by-nc-nd.txt"
 
 [Files]
 Source: "C:\Users\Víctor\Documents\Visual Studio 2017\Projects\OrionDocs\OrionDocs\bin\Release\OrionDocs.exe"; DestDir: "{app}"; Flags: ignoreversion

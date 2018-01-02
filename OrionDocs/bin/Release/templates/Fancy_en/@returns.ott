@@ -1,0 +1,4 @@
+					<tr>
+						<td><img src="img/return.png" style="vertical-align: middle"><span class="param-type param-type-{tolower({2})}">&nbsp;{1}</span></td>
+						<td>{3}</td>
+					</tr>

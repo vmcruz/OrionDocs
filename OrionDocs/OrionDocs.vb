@@ -15,7 +15,7 @@ Module OrionDocs
     Public patch As String = My.Application.Info.Version.Build.ToString '# Incrementar con parches
     Public revision As String = My.Application.Info.Version.Revision.ToString
     Public preRelease As String = "β" '# Modificar con cada etapa de desarrollo, actualmente beta [alpha | beta | rc (release candidate)]
-    Public buildDate As String = "2017.12.20" '# Cambiar con cada build de trabajo diaria
+    Public buildDate As String = "2017.12.31" '# Cambiar con cada build de trabajo diaria
     Public orionDocsVersion As String = major + "." + minor + "." + patch + "." + revision + preRelease
     Public orionDocsBuild As String = buildDate
 #End Region
@@ -284,6 +284,7 @@ Module OrionDocs
         Array.Sort(mergedFiles)
 
         For m = 0 To mergedFiles.Count - 1
+            mergedFiles(m) = Path.GetFullPath(mergedFiles(m))
             debugFile.Filename = mergedFiles(m)
             If File.Exists(mergedFiles(m)) Then
                 Dim oBlock As OBlock
@@ -505,12 +506,6 @@ Module OrionDocs
                             HTML.Write(htmlContent)
                             HTML.Close()
                         End If
-
-                        If cleanOrionDocsFileContent <> "" Then
-                            HTML = New StreamWriter("dist/" + mergedFiles(m), False, Encoding.UTF8)
-                            HTML.Write(cleanOrionDocsFileContent)
-                            HTML.Close()
-                        End If
                     Catch e As Exception
                         debugFile.Write("System Error(4): " + e.Message)
                         debugFile.WriteError("! System Error(4): " + e.Message)
@@ -523,8 +518,9 @@ Module OrionDocs
                         Dim folders As String() = templateConfiguration("COPY_DIR").Split(New String() {","}, StringSplitOptions.RemoveEmptyEntries)
                         For i = 0 To folders.Count - 1
                             Try
-                                My.Computer.FileSystem.CopyDirectory(themePath + "\" + folders(i).Trim(), project + "\" + folders(i).Trim(), True)
-                                If isDebug Then debugFile.Write("OrionDocs Inf: Dir copied from: '" + themePath + "\" + folders(i).Trim() + "' to '" + project + "\" + folders(i).Trim() + "'.")
+                                My.Computer.FileSystem.CopyDirectory(themePath + "\" + folders(i).Trim(), project + "/" + folders(i).Trim(), True)
+                                If isDebug Then debugFile.Write("OrionDocs Inf: Dir copied from: '" + themePath + "\" + folders(i).Trim() + "' to '" + project + "/" + folders(i).Trim() + "'.")
+
                             Catch e As Exception
                                 debugFile.Write("System Error(5): " + e.Message)
                                 debugFile.WriteError("! System Error(5): " + e.Message)
@@ -533,13 +529,28 @@ Module OrionDocs
                             End Try
                         Next
                     End If
+
+                    Try
+                        If isDebug Then debugFile.Write("OrionDocs Inf: Creating clean file for 'dist/" + Path.GetFileName(mergedFiles(m)) + "'.")
+                        If cleanOrionDocsFileContent <> "" Then
+                            HTML = New StreamWriter("dist/" + Path.GetFileName(mergedFiles(m)), False, Encoding.UTF8)
+                            HTML.Write(cleanOrionDocsFileContent)
+                            HTML.Close()
+                        End If
+                        If isDebug Then debugFile.Write("OrionDocs Inf: Done.")
+                    Catch e As Exception
+                        debugFile.Write("System Error(6): " + e.Message)
+                        debugFile.WriteError("! System Error(6): " + e.Message)
+                        debugFile.Save()
+                        End
+                    End Try
                 End If
             Else
                 debugFile.Write("OrionDocs Err(2): The file '" + mergedFiles(m) + "' doesn't exist.")
                 debugFile.WriteError("+ OrionDocs Err(2): The file '" + mergedFiles(m) + "' doesn't exist.")
             End If
 
-            debugFile.Save()
+            If isDebug Then debugFile.Save()
         Next m
     End Sub
 

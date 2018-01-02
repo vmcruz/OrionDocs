@@ -51,10 +51,13 @@ Partial Class frmConfig
         Me.chkDebug = New System.Windows.Forms.CheckBox()
         Me.txtTitle = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.tbpAbout = New System.Windows.Forms.TabPage()
+        Me.lblAbout = New System.Windows.Forms.Label()
         Me.TabControl1.SuspendLayout()
         Me.tbpTemplate.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.tbpDocumentation.SuspendLayout()
+        Me.tbpAbout.SuspendLayout()
         Me.SuspendLayout()
         '
         'btnSave
@@ -79,6 +82,7 @@ Partial Class frmConfig
         '
         Me.TabControl1.Controls.Add(Me.tbpTemplate)
         Me.TabControl1.Controls.Add(Me.tbpDocumentation)
+        Me.TabControl1.Controls.Add(Me.tbpAbout)
         Me.TabControl1.Location = New System.Drawing.Point(12, 12)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
@@ -322,6 +326,25 @@ Partial Class frmConfig
         Me.Label1.TabIndex = 11
         Me.Label1.Text = "Project Title:"
         '
+        'tbpAbout
+        '
+        Me.tbpAbout.Controls.Add(Me.lblAbout)
+        Me.tbpAbout.Location = New System.Drawing.Point(4, 22)
+        Me.tbpAbout.Name = "tbpAbout"
+        Me.tbpAbout.Padding = New System.Windows.Forms.Padding(3)
+        Me.tbpAbout.Size = New System.Drawing.Size(309, 289)
+        Me.tbpAbout.TabIndex = 2
+        Me.tbpAbout.Text = "About"
+        Me.tbpAbout.UseVisualStyleBackColor = True
+        '
+        'lblAbout
+        '
+        Me.lblAbout.Location = New System.Drawing.Point(6, 3)
+        Me.lblAbout.Name = "lblAbout"
+        Me.lblAbout.Size = New System.Drawing.Size(297, 171)
+        Me.lblAbout.TabIndex = 0
+        Me.lblAbout.Text = resources.GetString("lblAbout.Text")
+        '
         'frmConfig
         '
         Me.AcceptButton = Me.btnSave
@@ -344,6 +367,7 @@ Partial Class frmConfig
         Me.GroupBox1.PerformLayout()
         Me.tbpDocumentation.ResumeLayout(False)
         Me.tbpDocumentation.PerformLayout()
+        Me.tbpAbout.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -375,4 +399,6 @@ Partial Class frmConfig
     Friend WithEvents lstTemplate As Windows.Forms.ListView
     Friend WithEvents lblLang As Windows.Forms.Label
     Friend WithEvents Label12 As Windows.Forms.Label
+    Friend WithEvents tbpAbout As Windows.Forms.TabPage
+    Friend WithEvents lblAbout As Windows.Forms.Label
 End Class
