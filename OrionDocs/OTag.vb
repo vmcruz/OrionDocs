@@ -102,7 +102,6 @@ Class OTag
         Return ret
     End Function
 
-
     Public Function CharInstances(ByVal str As String, ByVal c As Char) As Integer
         Dim d As String() = str.Split(c)
         Return d.Count - 1

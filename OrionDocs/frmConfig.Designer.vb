@@ -28,7 +28,6 @@ Partial Class frmConfig
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tbpTemplate = New System.Windows.Forms.TabPage()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.lblLang = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.lblWeb = New System.Windows.Forms.LinkLabel()
         Me.Label11 = New System.Windows.Forms.Label()
@@ -42,6 +41,9 @@ Partial Class frmConfig
         Me.Label2 = New System.Windows.Forms.Label()
         Me.lstTemplate = New System.Windows.Forms.ListView()
         Me.tbpDocumentation = New System.Windows.Forms.TabPage()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.txtIndexContent = New System.Windows.Forms.TextBox()
+        Me.chkCreateIndex = New System.Windows.Forms.CheckBox()
         Me.txtGoto = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.txtExtension = New System.Windows.Forms.TextBox()
@@ -53,16 +55,19 @@ Partial Class frmConfig
         Me.Label1 = New System.Windows.Forms.Label()
         Me.tbpAbout = New System.Windows.Forms.TabPage()
         Me.lblAbout = New System.Windows.Forms.Label()
+        Me.pctError = New System.Windows.Forms.PictureBox()
+        Me.cboLanguages = New System.Windows.Forms.ComboBox()
         Me.TabControl1.SuspendLayout()
         Me.tbpTemplate.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.tbpDocumentation.SuspendLayout()
         Me.tbpAbout.SuspendLayout()
+        CType(Me.pctError, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'btnSave
         '
-        Me.btnSave.Location = New System.Drawing.Point(231, 333)
+        Me.btnSave.Location = New System.Drawing.Point(227, 365)
         Me.btnSave.Name = "btnSave"
         Me.btnSave.Size = New System.Drawing.Size(98, 23)
         Me.btnSave.TabIndex = 3
@@ -71,7 +76,7 @@ Partial Class frmConfig
         '
         'btnRestore
         '
-        Me.btnRestore.Location = New System.Drawing.Point(127, 333)
+        Me.btnRestore.Location = New System.Drawing.Point(123, 365)
         Me.btnRestore.Name = "btnRestore"
         Me.btnRestore.Size = New System.Drawing.Size(98, 23)
         Me.btnRestore.TabIndex = 2
@@ -86,7 +91,7 @@ Partial Class frmConfig
         Me.TabControl1.Location = New System.Drawing.Point(12, 12)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(317, 315)
+        Me.TabControl1.Size = New System.Drawing.Size(317, 347)
         Me.TabControl1.TabIndex = 13
         '
         'tbpTemplate
@@ -96,14 +101,14 @@ Partial Class frmConfig
         Me.tbpTemplate.Location = New System.Drawing.Point(4, 22)
         Me.tbpTemplate.Name = "tbpTemplate"
         Me.tbpTemplate.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpTemplate.Size = New System.Drawing.Size(309, 289)
+        Me.tbpTemplate.Size = New System.Drawing.Size(309, 321)
         Me.tbpTemplate.TabIndex = 0
         Me.tbpTemplate.Text = "Template"
         Me.tbpTemplate.UseVisualStyleBackColor = True
         '
         'GroupBox1
         '
-        Me.GroupBox1.Controls.Add(Me.lblLang)
+        Me.GroupBox1.Controls.Add(Me.cboLanguages)
         Me.GroupBox1.Controls.Add(Me.Label12)
         Me.GroupBox1.Controls.Add(Me.lblWeb)
         Me.GroupBox1.Controls.Add(Me.Label11)
@@ -117,23 +122,15 @@ Partial Class frmConfig
         Me.GroupBox1.Controls.Add(Me.Label2)
         Me.GroupBox1.Location = New System.Drawing.Point(6, 142)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(295, 141)
+        Me.GroupBox1.Size = New System.Drawing.Size(295, 173)
         Me.GroupBox1.TabIndex = 5
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Information"
         '
-        'lblLang
-        '
-        Me.lblLang.AutoSize = True
-        Me.lblLang.Location = New System.Drawing.Point(85, 117)
-        Me.lblLang.Name = "lblLang"
-        Me.lblLang.Size = New System.Drawing.Size(0, 13)
-        Me.lblLang.TabIndex = 11
-        '
         'Label12
         '
         Me.Label12.AutoSize = True
-        Me.Label12.Location = New System.Drawing.Point(21, 117)
+        Me.Label12.Location = New System.Drawing.Point(21, 143)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(58, 13)
         Me.Label12.TabIndex = 10
@@ -142,7 +139,7 @@ Partial Class frmConfig
         'lblWeb
         '
         Me.lblWeb.AutoSize = True
-        Me.lblWeb.Location = New System.Drawing.Point(85, 104)
+        Me.lblWeb.Location = New System.Drawing.Point(85, 124)
         Me.lblWeb.Name = "lblWeb"
         Me.lblWeb.Size = New System.Drawing.Size(0, 13)
         Me.lblWeb.TabIndex = 9
@@ -150,7 +147,7 @@ Partial Class frmConfig
         'Label11
         '
         Me.Label11.AutoSize = True
-        Me.Label11.Location = New System.Drawing.Point(30, 104)
+        Me.Label11.Location = New System.Drawing.Point(30, 124)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(49, 13)
         Me.Label11.TabIndex = 8
@@ -159,7 +156,7 @@ Partial Class frmConfig
         'lblContact
         '
         Me.lblContact.AutoSize = True
-        Me.lblContact.Location = New System.Drawing.Point(85, 91)
+        Me.lblContact.Location = New System.Drawing.Point(85, 111)
         Me.lblContact.Name = "lblContact"
         Me.lblContact.Size = New System.Drawing.Size(0, 13)
         Me.lblContact.TabIndex = 7
@@ -167,7 +164,7 @@ Partial Class frmConfig
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(32, 91)
+        Me.Label9.Location = New System.Drawing.Point(32, 111)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(47, 13)
         Me.Label9.TabIndex = 6
@@ -176,7 +173,7 @@ Partial Class frmConfig
         'lblAuthor
         '
         Me.lblAuthor.AutoSize = True
-        Me.lblAuthor.Location = New System.Drawing.Point(85, 78)
+        Me.lblAuthor.Location = New System.Drawing.Point(85, 98)
         Me.lblAuthor.Name = "lblAuthor"
         Me.lblAuthor.Size = New System.Drawing.Size(0, 13)
         Me.lblAuthor.TabIndex = 5
@@ -184,7 +181,7 @@ Partial Class frmConfig
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(38, 78)
+        Me.Label6.Location = New System.Drawing.Point(38, 98)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(41, 13)
         Me.Label6.TabIndex = 4
@@ -194,7 +191,7 @@ Partial Class frmConfig
         '
         Me.lblDescription.Location = New System.Drawing.Point(85, 29)
         Me.lblDescription.Name = "lblDescription"
-        Me.lblDescription.Size = New System.Drawing.Size(204, 49)
+        Me.lblDescription.Size = New System.Drawing.Size(204, 69)
         Me.lblDescription.TabIndex = 3
         '
         'Label7
@@ -234,6 +231,9 @@ Partial Class frmConfig
         '
         'tbpDocumentation
         '
+        Me.tbpDocumentation.Controls.Add(Me.Label8)
+        Me.tbpDocumentation.Controls.Add(Me.txtIndexContent)
+        Me.tbpDocumentation.Controls.Add(Me.chkCreateIndex)
         Me.tbpDocumentation.Controls.Add(Me.txtGoto)
         Me.tbpDocumentation.Controls.Add(Me.Label5)
         Me.tbpDocumentation.Controls.Add(Me.txtExtension)
@@ -246,31 +246,58 @@ Partial Class frmConfig
         Me.tbpDocumentation.Location = New System.Drawing.Point(4, 22)
         Me.tbpDocumentation.Name = "tbpDocumentation"
         Me.tbpDocumentation.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpDocumentation.Size = New System.Drawing.Size(309, 289)
+        Me.tbpDocumentation.Size = New System.Drawing.Size(309, 321)
         Me.tbpDocumentation.TabIndex = 1
-        Me.tbpDocumentation.Text = "Documentation"
+        Me.tbpDocumentation.Text = "Fallback Settings"
         Me.tbpDocumentation.UseVisualStyleBackColor = True
+        '
+        'Label8
+        '
+        Me.Label8.Location = New System.Drawing.Point(6, 15)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(297, 39)
+        Me.Label8.TabIndex = 22
+        Me.Label8.Text = "If the selected template lacks one of these settings, these values will be used i" &
+    "nstead."
+        '
+        'txtIndexContent
+        '
+        Me.txtIndexContent.Location = New System.Drawing.Point(6, 249)
+        Me.txtIndexContent.Multiline = True
+        Me.txtIndexContent.Name = "txtIndexContent"
+        Me.txtIndexContent.Size = New System.Drawing.Size(292, 43)
+        Me.txtIndexContent.TabIndex = 21
+        '
+        'chkCreateIndex
+        '
+        Me.chkCreateIndex.AutoSize = True
+        Me.chkCreateIndex.Location = New System.Drawing.Point(6, 226)
+        Me.chkCreateIndex.Name = "chkCreateIndex"
+        Me.chkCreateIndex.Size = New System.Drawing.Size(228, 17)
+        Me.chkCreateIndex.TabIndex = 20
+        Me.chkCreateIndex.Text = "Create index (e.g. index.html) file for project"
+        Me.chkCreateIndex.UseVisualStyleBackColor = True
         '
         'txtGoto
         '
-        Me.txtGoto.Location = New System.Drawing.Point(6, 131)
+        Me.txtGoto.Location = New System.Drawing.Point(6, 177)
         Me.txtGoto.Multiline = True
         Me.txtGoto.Name = "txtGoto"
-        Me.txtGoto.Size = New System.Drawing.Size(292, 105)
+        Me.txtGoto.Size = New System.Drawing.Size(292, 43)
         Me.txtGoto.TabIndex = 19
         '
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(6, 115)
+        Me.Label5.Location = New System.Drawing.Point(6, 161)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(122, 13)
+        Me.Label5.Size = New System.Drawing.Size(152, 13)
         Me.Label5.TabIndex = 18
-        Me.Label5.Text = "{goto} fallback template:"
+        Me.Label5.Text = "{ goto } Special Tag Template:"
         '
         'txtExtension
         '
-        Me.txtExtension.Location = New System.Drawing.Point(171, 81)
+        Me.txtExtension.Location = New System.Drawing.Point(171, 127)
         Me.txtExtension.Name = "txtExtension"
         Me.txtExtension.Size = New System.Drawing.Size(130, 20)
         Me.txtExtension.TabIndex = 17
@@ -278,7 +305,7 @@ Partial Class frmConfig
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(6, 84)
+        Me.Label4.Location = New System.Drawing.Point(6, 130)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(159, 13)
         Me.Label4.TabIndex = 16
@@ -286,7 +313,7 @@ Partial Class frmConfig
         '
         'txtFirstLine
         '
-        Me.txtFirstLine.Location = New System.Drawing.Point(133, 46)
+        Me.txtFirstLine.Location = New System.Drawing.Point(133, 92)
         Me.txtFirstLine.Name = "txtFirstLine"
         Me.txtFirstLine.Size = New System.Drawing.Size(168, 20)
         Me.txtFirstLine.TabIndex = 15
@@ -294,7 +321,7 @@ Partial Class frmConfig
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(6, 49)
+        Me.Label3.Location = New System.Drawing.Point(6, 95)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(121, 13)
         Me.Label3.TabIndex = 14
@@ -303,7 +330,7 @@ Partial Class frmConfig
         'chkDebug
         '
         Me.chkDebug.AutoSize = True
-        Me.chkDebug.Location = New System.Drawing.Point(6, 252)
+        Me.chkDebug.Location = New System.Drawing.Point(6, 298)
         Me.chkDebug.Name = "chkDebug"
         Me.chkDebug.Size = New System.Drawing.Size(112, 17)
         Me.chkDebug.TabIndex = 13
@@ -312,7 +339,7 @@ Partial Class frmConfig
         '
         'txtTitle
         '
-        Me.txtTitle.Location = New System.Drawing.Point(78, 11)
+        Me.txtTitle.Location = New System.Drawing.Point(78, 57)
         Me.txtTitle.Name = "txtTitle"
         Me.txtTitle.Size = New System.Drawing.Size(223, 20)
         Me.txtTitle.TabIndex = 12
@@ -320,7 +347,7 @@ Partial Class frmConfig
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(6, 14)
+        Me.Label1.Location = New System.Drawing.Point(6, 60)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(66, 13)
         Me.Label1.TabIndex = 11
@@ -332,7 +359,7 @@ Partial Class frmConfig
         Me.tbpAbout.Location = New System.Drawing.Point(4, 22)
         Me.tbpAbout.Name = "tbpAbout"
         Me.tbpAbout.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpAbout.Size = New System.Drawing.Size(309, 289)
+        Me.tbpAbout.Size = New System.Drawing.Size(309, 321)
         Me.tbpAbout.TabIndex = 2
         Me.tbpAbout.Text = "About"
         Me.tbpAbout.UseVisualStyleBackColor = True
@@ -345,12 +372,33 @@ Partial Class frmConfig
         Me.lblAbout.TabIndex = 0
         Me.lblAbout.Text = resources.GetString("lblAbout.Text")
         '
+        'pctError
+        '
+        Me.pctError.Image = Global.OrionDocs.My.Resources.Resources.noimage
+        Me.pctError.Location = New System.Drawing.Point(16, 365)
+        Me.pctError.Name = "pctError"
+        Me.pctError.Size = New System.Drawing.Size(100, 50)
+        Me.pctError.TabIndex = 6
+        Me.pctError.TabStop = False
+        Me.pctError.Visible = False
+        '
+        'cboLanguages
+        '
+        Me.cboLanguages.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboLanguages.FormattingEnabled = True
+        Me.cboLanguages.Location = New System.Drawing.Point(85, 140)
+        Me.cboLanguages.Name = "cboLanguages"
+        Me.cboLanguages.Size = New System.Drawing.Size(121, 21)
+        Me.cboLanguages.Sorted = True
+        Me.cboLanguages.TabIndex = 11
+        '
         'frmConfig
         '
         Me.AcceptButton = Me.btnSave
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(340, 364)
+        Me.ClientSize = New System.Drawing.Size(338, 400)
+        Me.Controls.Add(Me.pctError)
         Me.Controls.Add(Me.TabControl1)
         Me.Controls.Add(Me.btnRestore)
         Me.Controls.Add(Me.btnSave)
@@ -360,7 +408,7 @@ Partial Class frmConfig
         Me.MinimizeBox = False
         Me.Name = "frmConfig"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Default Settings Configuration"
+        Me.Text = "Fallback Settings Configuration"
         Me.TabControl1.ResumeLayout(False)
         Me.tbpTemplate.ResumeLayout(False)
         Me.GroupBox1.ResumeLayout(False)
@@ -368,6 +416,7 @@ Partial Class frmConfig
         Me.tbpDocumentation.ResumeLayout(False)
         Me.tbpDocumentation.PerformLayout()
         Me.tbpAbout.ResumeLayout(False)
+        CType(Me.pctError, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -397,8 +446,12 @@ Partial Class frmConfig
     Friend WithEvents lblName As Windows.Forms.Label
     Friend WithEvents Label2 As Windows.Forms.Label
     Friend WithEvents lstTemplate As Windows.Forms.ListView
-    Friend WithEvents lblLang As Windows.Forms.Label
     Friend WithEvents Label12 As Windows.Forms.Label
     Friend WithEvents tbpAbout As Windows.Forms.TabPage
     Friend WithEvents lblAbout As Windows.Forms.Label
+    Friend WithEvents txtIndexContent As Windows.Forms.TextBox
+    Friend WithEvents chkCreateIndex As Windows.Forms.CheckBox
+    Friend WithEvents Label8 As Windows.Forms.Label
+    Friend WithEvents pctError As Windows.Forms.PictureBox
+    Friend WithEvents cboLanguages As Windows.Forms.ComboBox
 End Class

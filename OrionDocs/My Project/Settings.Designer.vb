@@ -56,7 +56,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("Fancy_en")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Fancy")>  _
         Public Property DefaultTemplate() As String
             Get
                 Return CType(Me("DefaultTemplate"),String)
@@ -135,6 +135,54 @@ Namespace My
             End Get
             Set
                 Me("BlockTypes") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property CreateIndex() As Boolean
+            Get
+                Return CType(Me("CreateIndex"),Boolean)
+            End Get
+            Set
+                Me("CreateIndex") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("<script>location.href='{PAGE(0)}';</script>")>  _
+        Public Property IndexContent() As String
+            Get
+                Return CType(Me("IndexContent"),String)
+            End Get
+            Set
+                Me("IndexContent") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("ee69c9f5028f680eeec0497f118fb5c1")>  _
+        Public Property TemplateHash() As String
+            Get
+                Return CType(Me("TemplateHash"),String)
+            End Get
+            Set
+                Me("TemplateHash") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("en")>  _
+        Public Property TemplateLang() As String
+            Get
+                Return CType(Me("TemplateLang"),String)
+            End Get
+            Set
+                Me("TemplateLang") = value
             End Set
         End Property
     End Class

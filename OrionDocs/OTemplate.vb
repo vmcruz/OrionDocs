@@ -1,6 +1,8 @@
 ﻿Imports System.Text.RegularExpressions
 Imports System.Text
 Imports System.IO
+Imports System.Security.Cryptography
+
 
 Class OTemplate
     'Private tagDefinition As Dictionary(Of String, String)
@@ -10,37 +12,48 @@ Class OTemplate
     Private appPath As String
     Private themePath As String
     Private themeName As String
+    Private themeLang As String
+    Public fileHash As String
 
     Public Sub New(ByVal themeName As String)
-        'tagDefinition = New Dictionary(Of String, String)
+
         tagTemplate = New Dictionary(Of String, String)
         tConfiguration = New Dictionary(Of String, Dictionary(Of String, String))
         specialRegexes = New SortedDictionary(Of String, String)
         appPath = AppDomain.CurrentDomain.BaseDirectory()
 
-        Me.themeName = themeName
+        Dim themeConfig() As String = themeName.Split(":")
 
-        themePath = appPath + "templates\" + themeName
+        Me.themeName = themeConfig(0).Trim()
+        If themeConfig.Count = 2 AndAlso themeConfig(1).Trim() <> "" Then
+            themeLang = themeConfig(1).Trim()
+        Else
+            themeLang = ""
+        End If
+
+        themePath = appPath + "templates\" + Me.themeName
         Dim content As String
+
+        '#FUNCIONES ESPECIALES DENTRO DEL TEMPLATE
+        specialRegexes.Add("tolower", "{\s*tolower\(\s*(.+?)\s*\)\s*}")
+        specialRegexes.Add("toupper", "{\s*toupper\(\s*(.+?)\s*\)\s*}")
+        specialRegexes.Add("padleft", "{\s*padleft\(\s*(.+?)\s*,\s*(\d+)\s*,\s*(.+?)\)\s*}")
+        specialRegexes.Add("padright", "{\s*padright\(\s*(.+?)\s*,\s*(\d+)\s*,\s*(.+?)\)\s*}")
+        specialRegexes.Add("trim", "{\s*trim\(\s*(.+?)\s*\)\s*}")
+        specialRegexes.Add("replace", "{\s*replace\(\s*(.+?)\s*,\s*(.+?)\s*,\s*(.+?)\)\s*}")
+        specialRegexes.Add("substring", "{\s*substring\(\s*(.+?)\s*,\s*(.+?)\s*,\s*(.+?)\)\s*}")
+        specialRegexes.Add("length", "{\s*length\(\s*(.+?)\s*\)\s*}")
+        specialRegexes.Add("removeinvalid", "{\s*removeinvalid\(\s*(.+?)\s*\)\s*}")
+        specialRegexes.Add("template", "{\s*template\.(\w+?)\.(\w+?)\s*}")
+        specialRegexes.Add("removechar", "{\s*removechar\(\s*(.+?)\s*,\s*(.+?)\s*\)\s*}")
 
         Dim definition As String = themePath + "\template.otd"
         If File.Exists(definition) Then
+            fileHash = getFileHash(definition)
             Dim OTD As StreamReader = New StreamReader(definition, Encoding.UTF8)
             content = OTD.ReadToEnd()
-            OTD.Close()
 
-            '#FUNCIONES ESPECIALES DENTRO DEL TEMPLATE
-            specialRegexes.Add("tolower", "{\s*tolower\(\s*(.+?)\s*\)\s*}")
-            specialRegexes.Add("toupper", "{\s*toupper\(\s*(.+?)\s*\)\s*}")
-            specialRegexes.Add("padleft", "{\s*padleft\(\s*(.+?)\s*,\s*(\d+)\s*,\s*(.+?)\)\s*}")
-            specialRegexes.Add("padright", "{\s*padright\(\s*(.+?)\s*,\s*(\d+)\s*,\s*(.+?)\)\s*}")
-            specialRegexes.Add("trim", "{\s*trim\(\s*(.+?)\s*\)\s*}")
-            specialRegexes.Add("replace", "{\s*replace\(\s*(.+?)\s*,\s*(.+?)\s*,\s*(.+?)\)\s*}")
-            specialRegexes.Add("substring", "{\s*substring\(\s*(.+?)\s*,\s*(.+?)\s*,\s*(.+?)\)\s*}")
-            specialRegexes.Add("length", "{\s*length\(\s*(.+?)\s*\)\s*}")
-            specialRegexes.Add("removeinvalid", "{\s*removeinvalid\(\s*(.+?)\s*\)\s*}")
-            specialRegexes.Add("template", "{\s*template\.(\w+?)\.(\w+?)\s*}")
-            specialRegexes.Add("removechar", "{\s*removechar\(\s*(.+?)\s*,\s*(.+?)\s*\)\s*}")
+            OTD.Close()
 
             Dim data As String = "", key As String = ""
             Dim keyValue As String()
@@ -70,12 +83,12 @@ Class OTemplate
                                 End If
                             Else
                                 Dim ex As New Exception("Malformed template.otd configuration. Only the key was provided: '" + context + "'.")
-                                ex.Data.Add("Source", "OTemplate:63")
+                                ex.Data.Add("Source", "OTemplate:69")
                                 Throw ex
                             End If
                         Else
                             Dim ex As New Exception("Malformed template.otd configuration. The key wasn't provided: '" + context + "'.")
-                            ex.Data.Add("Source", "OTemplate:61")
+                            ex.Data.Add("Source", "OTemplate:67")
                             Throw ex
                         End If
                     End If
@@ -90,7 +103,7 @@ Class OTemplate
 
             If Not tConfiguration.ContainsKey("definition") Then
                 Dim ex As New Exception("Malformed template.otd configuration. The 'definition' section wasn't found.")
-                ex.Data.Add("Source", "OTemplate:91")
+                ex.Data.Add("Source", "OTemplate:97")
                 Throw ex
             Else
                 Dim k As Integer
@@ -101,35 +114,66 @@ Class OTemplate
                     Next
                 Catch e As Exception
                     Dim ex As New Exception("Malformed RegEx in template.otd: " + tConfiguration("definition").Keys.ElementAt(k) + ". RegEx parser: " + e.Message)
-                    ex.Data.Add("Source", "OTemplate:100")
+                    ex.Data.Add("Source", "OTemplate:106")
                     Throw ex
                 End Try
             End If
+
+            If tConfiguration("info")("languages") = "" Then
+                Dim ex As New Exception("Malformed templated.otd configuration, 'languages' parameter is not present in info section")
+                ex.Data.Add("Source", "OTemplate:117")
+                Throw ex
+            End If
         Else
             Dim ex As New Exception("Main template config file 'template.otd' doesn't exist.")
-            ex.Data.Add("Source", "OTemplate:27")
+            ex.Data.Add("Source", "OTemplate:46")
             Throw ex
         End If
     End Sub
 
+    Public Function getFileHash(ByVal FileName As String) As String
+        Dim fileStream As FileStream = File.OpenRead(FileName)
+        Dim hash As MD5 = MD5.Create()
+        Dim md5Hash() As Byte = hash.ComputeHash(fileStream)
+        fileStream.Close()
+        Dim hex As String = ""
+        Dim i As Integer
+        For i = 0 To md5Hash.Length - 1
+            hex += md5Hash(i).ToString("X2")
+        Next i
+        Return hex.ToLower
+    End Function
+
     Public Sub LoadTemplateFiles()
-        Dim files() As String = Directory.GetFiles(themePath, "*.ott", SearchOption.TopDirectoryOnly)
-        Dim content As String
-        For Each f In files
-            If File.Exists(f) Then
-                Dim OTT As StreamReader = New StreamReader(f, Encoding.UTF8)
-                content = OTT.ReadToEnd()
+        If themeLang <> "" Then
+            If Directory.Exists(themePath + "\lang\" + themeLang) Then
+                Dim files() As String = Directory.GetFiles(themePath + "\lang\" + themeLang, "*.ott", SearchOption.TopDirectoryOnly)
+                Dim content As String
+                For Each f In files
+                    If File.Exists(f) Then
+                        Dim OTT As StreamReader = New StreamReader(f, Encoding.UTF8)
+                        content = OTT.ReadToEnd()
 
-                Dim name As String = Path.GetFileName(f).Replace(".ott", "")
-                OTT.Close()
+                        Dim name As String = Path.GetFileName(f).Replace(".ott", "")
+                        OTT.Close()
 
-                tagTemplate.Add(name, content)
+                        tagTemplate.Add(name, content)
+                    End If
+                Next f
+
+                If Not ContainsTemplate(themeName) Then
+                    Dim ex As New Exception("Main template file " + themeName + ".ott doesn't exist.")
+                    ex.Data.Add("Source", "OTemplate:126")
+                    Throw ex
+                End If
+            Else
+                Dim ex As New Exception("The selected language '" + themeLang + "' doesn't exist.")
+                ex.Data.Add("Source", "OTemplate:125")
+                Throw ex
             End If
-        Next f
-
-        If Not ContainsTemplate(themeName) Then
-            Dim ex As New Exception("Main template file " + themeName + ".ott doesn't exist.")
-            ex.Data.Add("Source", "OTemplate:116")
+        Else
+            Dim ex As New Exception("No language selected.")
+            ex.Data.Add("Source", "OTemplate:124")
             Throw ex
         End If
     End Sub
@@ -248,14 +292,15 @@ Class OTemplate
             )
         Next
 
-        Return ReplaceSpecialTags(myTemplate)
+        Return ReplaceSpecialTags(myTemplate, tag)
     End Function
 
-    Public Function ReplaceSpecialTags(ByVal Template As String) As String
+    Public Function ReplaceSpecialTags(ByVal Template As String, ByVal Tag As OTag) As String
         Return Template _
         .Replace("{VERSION}", orionDocsVersion) _
         .Replace("{BUILD}", orionDocsBuild) _
-        .Replace("{FILE_EXTENSION}", templateConfiguration("FILE_EXTENSION"))
+        .Replace("{FILE_EXTENSION}", templateConfiguration("FILE_EXTENSION")) _
+        .Replace("{TAGTYPE}", Tag.GetName.Substring(1))
     End Function
 
     Public Function ParseSpecialRegexes(ByVal Text As String) As String

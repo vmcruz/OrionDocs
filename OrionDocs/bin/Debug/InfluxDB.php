@@ -5,7 +5,7 @@
 	class InfluxDB {
 		/**
 			Permite crear una nueva instancia de InfluxDB
-			@class InfluxDB.__construct
+			@class InfluxDB
 			
 			@prop {private String} host - Servidor al que InfluxDB debe conectarse (dirección ip o nombre de dominio)
 			@prop {private Integer} port - Puerto al que se ha de conectar

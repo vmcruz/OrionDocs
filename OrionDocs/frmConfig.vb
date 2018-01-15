@@ -5,21 +5,26 @@ Imports System.Windows.Forms
 Public Class frmConfig
     Private templateList As List(Of OTemplate)
     Private templateFolder As List(Of String)
+    Private templateLanguageList As Dictionary(Of String, String)
     Private selectedListIndex As Integer
 
     Private Sub frmConfig_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         lblAbout.Text = "OrionDocs v" + orionDocsVersion + " (c) by Víctor Cruz" & vbCrLf & vbCrLf
         lblAbout.Text += "OrionDocs v" + orionDocsVersion + " Is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License." & vbCrLf & vbCrLf
         lblAbout.Text += "You should have received a copy of the license along with this work. If not, see <http://creativecommons.org/licenses/by-nc-nd/4.0/>."
+
         txtTitle.Text = My.Settings.DefaultTitle
         txtFirstLine.Text = My.Settings.FirstLine
         txtGoto.Text = My.Settings.GotoRedir
         txtExtension.Text = My.Settings.FileExtension
         chkDebug.Checked = My.Settings.SaveDebug
+        chkCreateIndex.Checked = My.Settings.CreateIndex
+        txtIndexContent.Text = My.Settings.IndexContent
         lstTemplate.MultiSelect = False
         selectedListIndex = -1
 
         Try
+            templateLanguageList = New Dictionary(Of String, String)
             Dim templates As String() = Directory.GetDirectories(Application.StartupPath + "\templates\")
             templateList = New List(Of OTemplate)
             templateFolder = New List(Of String)
@@ -28,21 +33,19 @@ Public Class frmConfig
             lstTemplate.Clear()
             lstTemplate.LargeImageList = templateImgList
 
-
             For Each template As String In templates
                 Dim templateTmp As New OTemplate(template.Replace(Application.StartupPath + "\templates\", ""))
                 If templateTmp.GetConfig("info", "name") <> "" Then
                     Dim templateItem As New ListViewItem()
-                    Dim langText As String = ""
 
-                    If templateTmp.GetConfig("info", "language").Length > 0 Then
-                        langText = " (" + templateTmp.GetConfig("info", "language") + ")"
-                    End If
-
-                    templateItem.Text = templateTmp.GetConfig("info", "name") + langText
+                    templateItem.Text = templateTmp.GetConfig("info", "name")
 
                     If templateTmp.GetConfig("info", "screenshot") <> "" Then
-                        templateImgList.Images.Add(templateTmp.GetConfig("info", "name"), Bitmap.FromFile(template + "\" + templateTmp.GetConfig("info", "screenshot")))
+                        If File.Exists(template + "\" + templateTmp.GetConfig("info", "screenshot")) Then
+                            templateImgList.Images.Add(templateTmp.GetConfig("info", "name"), Bitmap.FromFile(template + "\" + templateTmp.GetConfig("info", "screenshot")))
+                        Else
+                            templateImgList.Images.Add(templateTmp.GetConfig("info", "name"), pctError.Image)
+                        End If
                         templateItem.ImageKey = templateTmp.GetConfig("info", "name")
                     End If
 
@@ -50,7 +53,7 @@ Public Class frmConfig
                     templateList.Add(templateTmp)
                     templateFolder.Add(template.Replace(Application.StartupPath + "\templates\", ""))
 
-                    If templateTmp.GetConfig("info", "name") = My.Settings.DefaultTemplate Then
+                    If templateTmp.GetConfig("info", "name") = My.Settings.DefaultTemplate AndAlso templateTmp.fileHash = My.Settings.TemplateHash Then
                         selectedListIndex = templateList.Count - 1
                     End If
                 End If
@@ -99,13 +102,27 @@ Public Class frmConfig
                 lblWeb.Text = ""
             End If
 
-            If info.GetConfig("info", "language") <> "" Then
-                lblLang.Text = info.GetConfig("info", "language")
-            Else
-                lblLang.Text = ""
-            End If
+            Try
+                templateLanguageList.Clear()
+                cboLanguages.Items.Clear()
+                Dim selectedLanguage As Integer = 0
+                If info.GetConfig("info", "languages") <> "" Then
+                    Dim languages() As String = info.GetConfig("info", "languages").Split(",")
+                    For Each language As String In languages
+                        Dim langConfig() As String = language.Trim().Split(":")
+                        If langConfig.Count = 2 Then
+                            templateLanguageList.Add(langConfig(0).Trim(), langConfig(1).Trim())
+                            cboLanguages.Items.Add(langConfig(0).Trim())
+                            If langConfig(1).Trim() = My.Settings.TemplateLang Then selectedLanguage = cboLanguages.Items.Count - 1
+                        End If
+                    Next
+                    cboLanguages.SelectedIndex = selectedLanguage
+                End If
+            Catch ex As Exception
+                MsgBox(ex.GetType().ToString + ": " + ex.Message, MsgBoxStyle.Critical, "Error loading template")
+                End
+            End Try
         Else
-            lblLang.Text = ""
             lblWeb.Text = ""
             lblContact.Text = ""
             lblAuthor.Text = ""
@@ -119,17 +136,21 @@ Public Class frmConfig
         If selectedListIndex > -1 Then
             With My.Settings
                 .DefaultTemplate = templateFolder(selectedListIndex)
+                .TemplateHash = templateList(selectedListIndex).fileHash
+                .TemplateLang = templateLanguageList(cboLanguages.Text)
                 .DefaultTitle = txtTitle.Text
                 .GotoRedir = txtGoto.Text
                 .FirstLine = txtFirstLine.Text
                 .FileExtension = txtExtension.Text
                 .SaveDebug = chkDebug.Checked
+                .CreateIndex = chkCreateIndex.Checked
+                .IndexContent = txtIndexContent.Text
                 .Save()
                 MsgBox("Default settings have been updated", vbInformation, "OrionDocs Settings Configuration")
                 FocusLstView()
             End With
         Else
-            MsgBox("Is a must to select a default template!", vbCritical)
+            MsgBox("Please reselect the template for default configuration.", vbExclamation)
         End If
     End Sub
 
@@ -143,7 +164,18 @@ Public Class frmConfig
         txtFirstLine.Text = "@description"
         txtExtension.Text = ".html"
         chkDebug.Checked = True
+        chkCreateIndex.Checked = True
+        txtIndexContent.Text = "<script>location.href='{PAGE(0)}';</script>"
+
+        Dim i As Integer = 0
         selectedListIndex = 0
+        For i = 0 To lstTemplate.Items.Count - 1
+            If templateList(i).fileHash = My.Settings.TemplateHash Then
+                selectedListIndex = i
+                Exit For
+            End If
+        Next
+
         FocusLstView()
     End Sub
 

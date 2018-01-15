@@ -1,1 +1,0 @@
-"{0}|{removeinvalid({0})}|{removechar({FILE_EXTENSION}, .) }|{@exposure}|{replace({0}, ., ●)}",

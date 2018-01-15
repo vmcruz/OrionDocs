@@ -15,7 +15,7 @@ Module OrionDocs
     Public patch As String = My.Application.Info.Version.Build.ToString '# Incrementar con parches
     Public revision As String = My.Application.Info.Version.Revision.ToString
     Public preRelease As String = "β" '# Modificar con cada etapa de desarrollo, actualmente beta [alpha | beta | rc (release candidate)]
-    Public buildDate As String = "2017.12.31" '# Cambiar con cada build de trabajo diaria
+    Public buildDate As String = "2018.01.11" '# Cambiar con cada build de trabajo diaria
     Public orionDocsVersion As String = major + "." + minor + "." + patch + "." + revision + preRelease
     Public orionDocsBuild As String = buildDate
 #End Region
@@ -98,6 +98,7 @@ Module OrionDocs
         templateConfiguration.Add("GOTO_REDIR", My.Settings.GotoRedir)
         templateConfiguration.Add("DEFAULT_PROJECT_TITLE", My.Settings.DefaultTitle)
         templateConfiguration.Add("BLOCKTYPES", My.Settings.BlockTypes)
+        templateConfiguration.Add("INDEXCONTENT", My.Settings.IndexContent)
 
         '# Nombre del archivo
         Dim DFile As String = argv(1)
@@ -126,13 +127,13 @@ Module OrionDocs
         End If
 
         '# Nombre del tema a usar, si no existe usar @default
-        Dim themeName As String = My.Settings.DefaultTemplate
-        Dim theme As String = "@" + My.Settings.DefaultTemplate
+        Dim themeName As String = My.Settings.DefaultTemplate + ":" + My.Settings.TemplateLang
+        Dim theme As String = "@" + My.Settings.DefaultTemplate + ":" + My.Settings.TemplateLang
         Dim projectTitleArg As Boolean = False
 
         If argc >= 3 Then
             If argv(2).Substring(0, 1) = "?" Then
-                argv(2) = InputBox("Enter the name of the template:", "Template Name", theme)
+                argv(2) = InputBox("Enter the name of the template:", "Template Name in this format: ""TemplateName:Lang""", theme)
                 If argv(2).Length > 0 Then
                     If argv(2).Substring(0, 1) <> "@" Then
                         argv(2) = "@" + argv(2)
@@ -184,6 +185,8 @@ Module OrionDocs
             End
         End Try
 
+        Dim themeConfig() As String = themeName.Split(":")
+        themeName = themeConfig(0)
         If isDebug Then debugFile.Write("OrionDocs Inf: '" + themeName + "' template loaded")
 
         Dim themePath As String = AppDomain.CurrentDomain.BaseDirectory() + "templates\" + themeName
@@ -470,7 +473,7 @@ Module OrionDocs
 
                     Dim HTML As StreamWriter
                     Dim htmlContent As String
-                    Dim firstPage As String = ""
+                    Dim pageList As New List(Of String)
 
                     Try
                         For i = 0 To oBlocks.Count - 1
@@ -478,7 +481,7 @@ Module OrionDocs
                                 Dim name As String = oBlocks(i).GetTag(0).GetGroup(0).Replace("͵", ",")
                                 Dim properName As String = (New Regex("[^\w]+")).Replace(name, "_")
 
-                                If i = 0 Then firstPage = properName + templateConfiguration("FILE_EXTENSION")
+                                pageList.Add(properName + templateConfiguration("FILE_EXTENSION"))
 
                                 HTML = New StreamWriter(project + "/" + properName + templateConfiguration("FILE_EXTENSION"), False, Encoding.UTF8)
                                 htmlContent = ""
@@ -490,7 +493,9 @@ Module OrionDocs
                                     htmlContent = htmlContent.Replace(pair.Key, pair.Value)
                                 Next
 
+                                htmlContent = htmlContent.Replace("{BLOCKTYPE}", oBlocks(i).GetBlockType.Substring(1))
                                 htmlContent = htmlContent.Replace("{PROJECT_TITLE}", fixedProjectTitle)
+                                htmlContent = oTemplate.GetBlockTemplate(oBlocks(i), htmlContent)
                                 htmlContent = htmlContent.Replace("{CONTENT}", oTemplate.GetBlockTemplate(oBlocks(i)))
 
                                 HTML.Write(htmlContent)
@@ -500,14 +505,23 @@ Module OrionDocs
                             End If
                         Next
 
-                        If firstPage <> "" Then
-                            HTML = New StreamWriter(project + ".html", False, Encoding.UTF8)
-                            htmlContent = "<script>location.href='../" + project + "/" + firstPage + "';</script>"
-                            HTML.Write(htmlContent)
+
+                        If My.Settings.CreateIndex AndAlso templateConfiguration("INDEXCONTENT") <> "" AndAlso pageList.Count > 0 Then
+                            If isDebug Then debugFile.Write("OrionDocs Inf: Creating index file '" + project + "/index" + oTemplate.GetConfig("config", "fileext") + "'.")
+                            htmlContent = templateConfiguration("INDEXCONTENT")
+
+                            Dim searchPages As Regex = New Regex("{\s*page\s*\(\s*(\d+)\s*\)\s*}", RegexOptions.IgnoreCase)
+                            Dim pageMatch As Match = searchPages.Match(htmlContent)
+                            If pageMatch.Success Then
+                                If isDebug Then debugFile.Write("OrionDocs Inf: Replacing '" + pageMatch.Groups(0).ToString + "' to '" + pageList(Integer.Parse(pageMatch.Groups(1).ToString)) + "'.")
+                            End If
+
+                            HTML = New StreamWriter(project + "/index" + oTemplate.GetConfig("config", "fileext"), False, Encoding.UTF8)
+                            HTML.Write(htmlContent.Replace(pageMatch.Groups(0).ToString, pageList(Integer.Parse(pageMatch.Groups(1).ToString))))
                             HTML.Close()
                         End If
                     Catch e As Exception
-                        debugFile.Write("System Error(4): " + e.Message)
+                        debugFile.Write("System Error(4) :  " + e.Message)
                         debugFile.WriteError("! System Error(4): " + e.Message)
                         debugFile.Save()
                         End

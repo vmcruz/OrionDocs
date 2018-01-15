@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="DefaultTemplate" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Fancy_en</Value>
+      <Value Profile="(Default)">Fancy</Value>
     </Setting>
     <Setting Name="DefaultTitle" Type="System.String" Scope="User">
       <Value Profile="(Default)">{FILENAME}</Value>
@@ -22,6 +22,18 @@
     </Setting>
     <Setting Name="BlockTypes" Type="System.String" Scope="User">
       <Value Profile="(Default)">{ALL}</Value>
+    </Setting>
+    <Setting Name="CreateIndex" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="IndexContent" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;script&gt;location.href='{PAGE(0)}';&lt;/script&gt;</Value>
+    </Setting>
+    <Setting Name="TemplateHash" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ee69c9f5028f680eeec0497f118fb5c1</Value>
+    </Setting>
+    <Setting Name="TemplateLang" Type="System.String" Scope="User">
+      <Value Profile="(Default)">en</Value>
     </Setting>
   </Settings>
 </SettingsFile>

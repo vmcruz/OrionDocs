@@ -222,7 +222,7 @@ MostachoDB.prototype.tableexists = function(tName) {
 }
 
 /**
-@method MostachoDB.with
+@class MostachoDB.with
 @description Selecciona una tabla y permite ejecutar ciertas tareas sobre ella
 @param {string} tName - El nombre de la tabla a abrir
 */
@@ -338,7 +338,7 @@ MostachoDB.prototype.with = function(tName) {
 		var that = this;
 		
 		/**
-		@function MostachoDB.with.trigger
+		@method MostachoDB.with.trigger
 		@exposure public
 		@description Crea un nuevo trigger en la tabla actual
 		@param {function} f - La función a ser usada como trigger. Los eventos oninsert y ondelete toman como parámetro el objeto a ser procesado. El evento onupdate toma dos: el objeto a ser actualizado y el nuevo objeto
@@ -354,7 +354,7 @@ MostachoDB.prototype.with = function(tName) {
 		};
 	
 		/**
-		@function MostachoDB.with.truncate
+		@method MostachoDB.with.truncate
 		@description Elimina todos los datos de la tabla seleccionada
 		*/
 		this.truncate = function() {
@@ -367,7 +367,7 @@ MostachoDB.prototype.with = function(tName) {
 		};
 		
 		/**
-		@function MostachoDB.with.insert
+		@method MostachoDB.with.insert
 		@exposure public
 		@description Inserta un nuevo objeto en la actual tabla seleccionada
 		@param {object} o - El objeto a ser insertado
@@ -402,7 +402,7 @@ MostachoDB.prototype.with = function(tName) {
 		};
 		
 		/**
-		@function MostachoDB.with.select
+		@method MostachoDB.with.select
 		@exposure public
 		@description Devuelve un arreglo con los campos seleccionados
 		@param {string} fields - Campos a seleccionar separados por coma
@@ -732,7 +732,7 @@ MostachoDB.prototype.with = function(tName) {
 		};
 		
 		/**
-		 @function MostachoDB.with.orderByClause
+		 @class MostachoDB.with.orderByClause
 		 @exposure private
 		 @description Método que permite ordenar los registros devueltos por {goto:MostachoDB.with.whereClause}
 		 @param {object[]} recordset - Conjunto de registros devueltos por {goto:MostachoDB.with.whereClause}
@@ -741,7 +741,7 @@ MostachoDB.prototype.with = function(tName) {
 		*/
 		function orderByClause(recordset, fields, field) {
 			/**
-			@function MostachoDB.with.orderByClause.asc
+			@method MostachoDB.with.orderByClause.asc
 			@description Ordena los registros ascendentemente según el campo especificado
 			*/
 
@@ -758,7 +758,7 @@ MostachoDB.prototype.with = function(tName) {
 			};
 			
 			/**
-			@function MostachoDB.with.orderByClause.desc
+			@method MostachoDB.with.orderByClause.desc
 			@description Ordena los registros descendentemente según el campo especificado
 			*/
 			this.desc = function(nocleaning) {
