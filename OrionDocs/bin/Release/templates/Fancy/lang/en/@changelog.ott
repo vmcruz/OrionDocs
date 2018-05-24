@@ -1,0 +1,6 @@
+						<tr>
+							<td class="change change-{replace({1}, +|-|*, n|d|u)}">{replace({1}, +|-|*, N|D|U)}</td>
+							<td>{2}</td>
+							<td>{3}</td>
+							<td>{4}</td>
+						</tr>
