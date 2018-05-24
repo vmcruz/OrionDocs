@@ -1,0 +1,922 @@
+09:42:10.401 | OrionDocs Inf: <Full debug> mode enabled
+09:42:10.401 | OrionDocs Inf: 'Fancy:es' template selected
+09:42:10.432 | OrionDocs Inf: 'Fancy' template loaded
+09:42:10.432 | OrionDocs Inf: 'config' section loaded
+09:42:10.432 | OrionDocs Inf: Directories: img, css, fa, js, prism will be copied at the end
+09:42:10.432 | OrionDocs Inf: First line will be treated as @description
+09:42:10.432 | OrionDocs Inf: The project files will have '.html' extension
+09:42:10.432 | OrionDocs Inf: 'goto' special tag loaded from goto.ott
+09:42:10.432 | OrionDocs Inf: Valid block types are: class, method, singleton, function
+09:42:10.432 | OrionDocs Inf: Default project title is: '{toupper({FILENAME})} | Documentation'
+09:42:10.432 | OrionDocs Inf: File 'C:\Users\Víctor\Documents\Visual Studio 2017\Projects\OrionDocs\OrionDocs\bin\Debug\MostachoDB.js' loaded
+09:42:10.432 | OrionDocs Inf: 23 comment blocks were found
+09:42:10.432 | OrionDocs Inf: Working on comment block #1
+09:42:10.432 | OrionDocs Inf: 10 tags were found
+09:42:10.447 | OrionDocs Inf: Comment Block #1 is:
+09:42:10.463 | Type: @class
+Tags: {
+	@class
+	Groups: {
+		0 = MostachoDB
+		1 = MostachoDB
+		2 = MostachoDB
+	}
+	@description
+	Groups: {
+		0 = Crea una nueva instancia de MostachoDB, parámetros requeridos: idbName
+		1 = Crea una nueva instancia de MostachoDB, parámetros requeridos: idbName
+	}
+	@param
+	Groups: {
+		0 = {string} idbName - Define un nuevo <a class="fancy-goto" onclick="goto('MostachoDB_preparetable.html')">MostachoDB.preparetable()</a> nombre para la base de datos a crear o abrir si se encuentra creada
+		1 = string
+		2 = string
+		3 = idbName
+		4 = Define un nuevo <a class="fancy-goto" onclick="goto('MostachoDB_preparetable.html')">MostachoDB.preparetable()</a> nombre para la base de datos a crear o abrir si se encuentra creada
+	}
+	@param
+	Groups: {
+		0 = {string} idbVersion - Especifica la versión que se usará para la conexión
+		1 = string
+		2 = string
+		3 = idbVersion
+		4 = Especifica la versión que se usará para la conexión
+	}
+	@prop
+	Groups: {
+		0 = {public string} idbName - Guarda el nombre de la base de datos dentro de la instancia
+		1 = public
+		2 = string
+		3 = string
+		4 = idbName
+		5 = Guarda el nombre de la base de datos dentro de la instancia
+	}
+	@prop
+	Groups: {
+		0 = {public number} idbVersion - Guarda la versión de la base de datos a ser creada o abierta
+		1 = public
+		2 = number
+		3 = number
+		4 = idbVersion
+		5 = Guarda la versión de la base de datos a ser creada o abierta
+	}
+	@prop
+	Groups: {
+		0 = {public idbconnection} idbConnection - Apuntador a la conexión asociada con la base de datos seleccionada
+		1 = public
+		2 = idbconnection
+		3 = idbconnection
+		4 = idbConnection
+		5 = Apuntador a la conexión asociada con la base de datos seleccionada
+	}
+	@prop
+	Groups: {
+		0 = {public object[]} tables - Arreglo de objetos json que guardan la configuración de las tablas
+		1 = public
+		2 = object[]
+		3 = object
+		4 = tables
+		5 = Arreglo de objetos json que guardan la configuración de las tablas
+	}
+	@example
+	Groups: {
+		0 = Creación de una nueva instancia de MostachoDB ~ new MostachoDB("TestDB", 1);
+		1 = Creación de una nueva instancia de MostachoDB
+		2 = new MostachoDB("TestDB", 1);
+	}
+	@sourcecode
+	Groups: {
+		0 = var MostachoDB = function(idbName, idbVersion) {
+    if(!idbName)
+        return undefined;
+    this.idbName = idbName;
+    this.idbVersion = idbVersion;
+    this.idbConnection = undefined;
+    this.tableConfig = [];
+    this.tables = [];
+    this.fakeIDs = [];
+    this.triggers = {};
+}
+
+		1 = var MostachoDB = function(idbName, idbVersion) {
+    if(!idbName)
+        return undefined;
+    this.idbName = idbName;
+    this.idbVersion = idbVersion;
+    this.idbConnection = undefined;
+    this.tableConfig = [];
+    this.tables = [];
+    this.fakeIDs = [];
+    this.triggers = {};
+}
+
+		2 = 18
+		3 = 28
+	}
+}
+
+09:42:10.479 | OrionDocs Inf: Working on comment block #2
+09:42:10.479 | OrionDocs Inf: 5 tags were found
+09:42:10.479 | OrionDocs Inf: Comment Block #2 is:
+09:42:10.479 | Type: @method
+Tags: {
+	@method
+	Groups: {
+		0 = MostachoDB.preparetable
+		1 = preparetable
+		2 = preparetable
+	}
+	@description
+	Groups: {
+		0 = Genera una entrada para la creación de una tabla en la base de datos. DEBE ser ejecutado antes de realizar la conexión pues las tablas son creadas o accedidas a través de la conexión.
+		1 = Genera una entrada para la creación de una tabla en la base de datos. DEBE ser ejecutado antes de realizar la conexión pues las tablas son creadas o accedidas a través de la conexión.
+	}
+	@param
+	Groups: {
+		0 = {string} tName - Define un nombre para la tabla
+		1 = string
+		2 = string
+		3 = tName
+		4 = Define un nombre para la tabla
+	}
+	@param
+	Groups: {
+		0 = {string} primaryKey - Define una llave primaria para la tabla
+		1 = string
+		2 = string
+		3 = primaryKey
+		4 = Define una llave primaria para la tabla
+	}
+	@prop
+	Groups: {
+		0 = {private string[]} tableConfig - Guarda la tupla {tabla:llavePrimaria}
+		1 = private
+		2 = string[]
+		3 = string
+		4 = tableConfig
+		5 = Guarda la tupla {tabla:llavePrimaria}
+	}
+}
+
+09:42:10.479 | OrionDocs Inf: Working on comment block #3
+09:42:10.479 | OrionDocs Inf: 5 tags were found
+09:42:10.494 | OrionDocs Inf: Comment Block #3 is:
+09:42:10.494 | Type: @method
+Tags: {
+	@method
+	Groups: {
+		0 = MostachoDB.connect
+		1 = connect
+		2 = connect
+	}
+	@description
+	Groups: {
+		0 = Crea la conexión con la base de datos seleccionada al crear la instancia. Toma dos funciones como parámetros opcionales.
+		1 = Crea la conexión con la base de datos seleccionada al crear la instancia. Toma dos funciones como parámetros opcionales.
+	}
+	@param
+	Groups: {
+		0 = {function} onupgrade - Se ejecuta sólo cuando ocurre un cambio de versión de base de datos. Toma un parámetro opcional el cual es la instancia de MostachoDB
+		1 = function
+		2 = function
+		3 = onupgrade
+		4 = Se ejecuta sólo cuando ocurre un cambio de versión de base de datos. Toma un parámetro opcional el cual es la instancia de MostachoDB
+	}
+	@param
+	Groups: {
+		0 = {function} onready - Se ejecuta cuando la conexión con la base de datos ha sido creada satisfactoriamente y la sincronización ha terminado. Toma un parámetro opcional el cual es la instancia de MostachoDB
+		1 = function
+		2 = function
+		3 = onready
+		4 = Se ejecuta cuando la conexión con la base de datos ha sido creada satisfactoriamente y la sincronización ha terminado. Toma un parámetro opcional el cual es la instancia de MostachoDB
+	}
+	@example
+	Groups: {
+		0 = Eventos onupgrade y onready ~ MostachoDB.connect(function (instance) {
+    console.log('Evento para modificar la estructura de la base de datos);
+}, function(instance) {
+    console.log('Evento que se dispara cuando la base de datos termina de cargar');
+    console.log(instance);
+}
+		1 = Eventos onupgrade y onready
+		2 = MostachoDB.connect(function (instance) {
+    console.log('Evento para modificar la estructura de la base de datos);
+}, function(instance) {
+    console.log('Evento que se dispara cuando la base de datos termina de cargar');
+    console.log(instance);
+}
+	}
+}
+
+09:42:10.494 | OrionDocs Inf: Working on comment block #4
+09:42:10.494 | OrionDocs Inf: 4 tags were found
+09:42:10.494 | OrionDocs Inf: Comment Block #4 is:
+09:42:10.494 | Type: @method
+Tags: {
+	@method
+	Groups: {
+		0 = MostachoDB.sync
+		1 = sync
+		2 = sync
+	}
+	@description
+	Groups: {
+		0 = Sincroniza las tablas de la instancia
+con
+    la base de datos.
+		1 = Sincroniza las tablas de la instancia
+con
+    la base de datos.
+	}
+	@warning
+	Groups: {
+		0 = Borra todos los cambios de las transacciones que no hayan sido procesadas por IndexedDB hasta ese momento.
+		1 = Borra todos los cambios de las transacciones que no hayan sido procesadas por IndexedDB hasta ese momento.
+	}
+	@param
+	Groups: {
+		0 = {function} onready - Función definida por el usuario, se ejecuta cuando finaliza la sincronización. Toma un parámetro opcional el cual es la instancia de MostachoDB
+		1 = function
+		2 = function
+		3 = onready
+		4 = Función definida por el usuario, se ejecuta cuando finaliza la sincronización. Toma un parámetro opcional el cual es la instancia de MostachoDB
+	}
+}
+
+09:42:10.494 | OrionDocs Inf: Working on comment block #5
+09:42:10.494 | OrionDocs Inf: 2 tags were found
+09:42:10.494 | OrionDocs Inf: Comment Block #5 is:
+09:42:10.494 | Type: @method
+Tags: {
+	@method
+	Groups: {
+		0 = MostachoDB.close
+		1 = close
+		2 = close
+	}
+	@description
+	Groups: {
+		0 = Cierra la actual conexión a la base de datos
+		1 = Cierra la actual conexión a la base de datos
+	}
+}
+
+09:42:10.494 | OrionDocs Inf: Working on comment block #6
+09:42:10.494 | OrionDocs Inf: 3 tags were found
+09:42:10.494 | OrionDocs Inf: Comment Block #6 is:
+09:42:10.494 | Type: @method
+Tags: {
+	@method
+	Groups: {
+		0 = MostachoDB.dropdb
+		1 = dropdb
+		2 = dropdb
+	}
+	@description
+	Groups: {
+		0 = Elimina la actual base de datos seleccionada
+		1 = Elimina la actual base de datos seleccionada
+	}
+	@warning
+	Groups: {
+		0 = Este método será sólo usado cuando se desee eliminar completamente la base de datos. Los datos eliminados no podrán ser recuperados.
+		1 = Este método será sólo usado cuando se desee eliminar completamente la base de datos. Los datos eliminados no podrán ser recuperados.
+	}
+}
+
+09:42:10.494 | OrionDocs Inf: Working on comment block #7
+09:42:10.494 | OrionDocs Inf: 2 tags were found
+09:42:10.494 | OrionDocs Inf: Comment Block #7 is:
+09:42:10.494 | Type: @method
+Tags: {
+	@method
+	Groups: {
+		0 = MostachoDB.isConnected
+		1 = isConnected
+		2 = isConnected
+	}
+	@description
+	Groups: {
+		0 = Verifica si existe una conexión a una base de datos
+		1 = Verifica si existe una conexión a una base de datos
+	}
+}
+
+09:42:10.494 | OrionDocs Inf: Working on comment block #8
+09:42:10.494 | OrionDocs Inf: 5 tags were found
+09:42:10.494 | OrionDocs Inf: Comment Block #8 is:
+09:42:10.494 | Type: @method
+Tags: {
+	@method
+	Groups: {
+		0 = MostachoDB.droptable
+		1 = droptable
+		2 = droptable
+	}
+	@description
+	Groups: {
+		0 = Elimina una tabla de la base de datos.
+		1 = Elimina una tabla de la base de datos.
+	}
+	@warning
+	Groups: {
+		0 = Los datos eliminados de la tabla no podrán ser recuperados.
+		1 = Los datos eliminados de la tabla no podrán ser recuperados.
+	}
+	@notice
+	Groups: {
+		0 = Realizará la acción sólo si es invocado dentro de la función <onupgrade> del método <a class="fancy-goto" onclick="goto('MostachoDB_connect.html')">MostachoDB.connect()</a>
+		1 = Realizará la acción sólo si es invocado dentro de la función <onupgrade> del método <a class="fancy-goto" onclick="goto('MostachoDB_connect.html')">MostachoDB.connect()</a>
+	}
+	@param
+	Groups: {
+		0 = {string} tName - El nombre de la tabla a eliminar
+		1 = string
+		2 = string
+		3 = tName
+		4 = El nombre de la tabla a eliminar
+	}
+}
+
+09:42:10.494 | OrionDocs Inf: Working on comment block #9
+09:42:10.494 | OrionDocs Inf: 2 tags were found
+09:42:10.494 | OrionDocs Inf: Comment Block #9 is:
+09:42:10.494 | Type: @method
+Tags: {
+	@method
+	Groups: {
+		0 = MostachoDB.showtables
+		1 = showtables
+		2 = showtables
+	}
+	@description
+	Groups: {
+		0 = Muestra la lista de las tablas contenidas en MostachoDB
+		1 = Muestra la lista de las tablas contenidas en MostachoDB
+	}
+}
+
+09:42:10.494 | OrionDocs Inf: Working on comment block #10
+09:42:10.494 | OrionDocs Inf: 3 tags were found
+09:42:10.510 | OrionDocs Inf: Comment Block #10 is:
+09:42:10.510 | Type: @method
+Tags: {
+	@method
+	Groups: {
+		0 = MostachoDB.tableexists
+		1 = tableexists
+		2 = tableexists
+	}
+	@description
+	Groups: {
+		0 = Devuelve verdadero si el nombre de la tabla existe
+		1 = Devuelve verdadero si el nombre de la tabla existe
+	}
+	@param
+	Groups: {
+		0 = {string} tName - Nombre de la tabla a verificar
+		1 = string
+		2 = string
+		3 = tName
+		4 = Nombre de la tabla a verificar
+	}
+}
+
+09:42:10.510 | OrionDocs Inf: Working on comment block #11
+09:42:10.510 | OrionDocs Inf: 3 tags were found
+09:42:10.510 | OrionDocs Inf: Comment Block #11 is:
+09:42:10.510 | Type: @class
+Tags: {
+	@class
+	Groups: {
+		0 = MostachoDB.with
+		1 = with
+		2 = with
+	}
+	@description
+	Groups: {
+		0 = Selecciona una tabla y permite ejecutar ciertas tareas sobre ella
+		1 = Selecciona una tabla y permite ejecutar ciertas tareas sobre ella
+	}
+	@param
+	Groups: {
+		0 = {string} tName - El nombre de la tabla a abrir
+		1 = string
+		2 = string
+		3 = tName
+		4 = El nombre de la tabla a abrir
+	}
+}
+
+09:42:10.510 | OrionDocs Inf: Working on comment block #12
+09:42:10.510 | OrionDocs Inf: 4 tags were found
+09:42:10.510 | OrionDocs Inf: Comment Block #12 is:
+09:42:10.510 | Type: @function
+Tags: {
+	@function
+	Groups: {
+		0 = MostachoDB.with.getTransaction
+		1 = getTransaction
+		2 = getTransaction
+	}
+	@exposure
+	Groups: {
+		0 = private
+		1 = private
+	}
+	@description
+	Groups: {
+		0 = Devuelve una transacción nueva para la tabla con el modo de apertura especificado
+		1 = Devuelve una transacción nueva para la tabla con el modo de apertura especificado
+	}
+	@param
+	Groups: {
+		0 = {string} mode - El modo en el que el objeto se abrirá
+		1 = string
+		2 = string
+		3 = mode
+		4 = El modo en el que el objeto se abrirá
+	}
+}
+
+09:42:10.510 | OrionDocs Inf: Working on comment block #13
+09:42:10.510 | OrionDocs Inf: 6 tags were found
+09:42:10.510 | OrionDocs Inf: Comment Block #13 is:
+09:42:10.510 | Type: @method
+Tags: {
+	@method
+	Groups: {
+		0 = MostachoDB.with.trigger
+		1 = trigger
+		2 = trigger
+	}
+	@exposure
+	Groups: {
+		0 = public
+		1 = public
+	}
+	@description
+	Groups: {
+		0 = Crea un nuevo trigger en la tabla actual
+		1 = Crea un nuevo trigger en la tabla actual
+	}
+	@param
+	Groups: {
+		0 = {function} f - La función a ser usada como trigger. Los eventos oninsert y ondelete toman como parámetro el objeto a ser procesado. El evento onupdate toma dos: el objeto a ser actualizado y el nuevo objeto
+		1 = function
+		2 = function
+		3 = f
+		4 = La función a ser usada como trigger. Los eventos oninsert y ondelete toman como parámetro el objeto a ser procesado. El evento onupdate toma dos: el objeto a ser actualizado y el nuevo objeto
+	}
+	@returns
+	Groups: {
+		0 = {error} Si no se ha permitido el uso de triggers.
+		1 = error
+		2 = error
+		3 = Si no se ha permitido el uso de triggers.
+	}
+	@returns
+	Groups: {
+		0 = {object} Para asignar el trigger a los eventos oninsert(), onupdate() y ondelete()
+		1 = object
+		2 = object
+		3 = Para asignar el trigger a los eventos oninsert(), onupdate() y ondelete()
+	}
+}
+
+09:42:10.510 | OrionDocs Inf: Working on comment block #14
+09:42:10.510 | OrionDocs Inf: 2 tags were found
+09:42:10.510 | OrionDocs Inf: Comment Block #14 is:
+09:42:10.510 | Type: @method
+Tags: {
+	@method
+	Groups: {
+		0 = MostachoDB.with.truncate
+		1 = truncate
+		2 = truncate
+	}
+	@description
+	Groups: {
+		0 = Elimina todos los datos de la tabla seleccionada
+		1 = Elimina todos los datos de la tabla seleccionada
+	}
+}
+
+09:42:10.510 | OrionDocs Inf: Working on comment block #15
+09:42:10.510 | OrionDocs Inf: 4 tags were found
+09:42:10.510 | OrionDocs Inf: Comment Block #15 is:
+09:42:10.510 | Type: @method
+Tags: {
+	@method
+	Groups: {
+		0 = MostachoDB.with.insert
+		1 = insert
+		2 = insert
+	}
+	@exposure
+	Groups: {
+		0 = public
+		1 = public
+	}
+	@description
+	Groups: {
+		0 = Inserta un nuevo objeto en la actual tabla seleccionada
+		1 = Inserta un nuevo objeto en la actual tabla seleccionada
+	}
+	@param
+	Groups: {
+		0 = {object} o - El objeto a ser insertado
+		1 = object
+		2 = object
+		3 = o
+		4 = El objeto a ser insertado
+	}
+}
+
+09:42:10.510 | OrionDocs Inf: Working on comment block #16
+09:42:10.510 | OrionDocs Inf: 5 tags were found
+09:42:10.510 | OrionDocs Inf: Comment Block #16 is:
+09:42:10.510 | Type: @method
+Tags: {
+	@method
+	Groups: {
+		0 = MostachoDB.with.select
+		1 = select
+		2 = select
+	}
+	@exposure
+	Groups: {
+		0 = public
+		1 = public
+	}
+	@description
+	Groups: {
+		0 = Devuelve un arreglo con los campos seleccionados
+		1 = Devuelve un arreglo con los campos seleccionados
+	}
+	@param
+	Groups: {
+		0 = {string} fields - Campos a seleccionar separados por coma
+		1 = string
+		2 = string
+		3 = fields
+		4 = Campos a seleccionar separados por coma
+	}
+	@returns
+	Groups: {
+		0 = {object[]} -
+		1 = object[]
+		2 = object
+		3 = -
+	}
+}
+
+09:42:10.510 | OrionDocs Inf: Working on comment block #17
+09:42:10.510 | OrionDocs Inf: 8 tags were found
+09:42:10.525 | OrionDocs Inf: Comment Block #17 is:
+09:42:10.525 | Type: @function
+Tags: {
+	@function
+	Groups: {
+		0 = MostachoDB.with.joinClause
+		1 = joinClause
+		2 = joinClause
+	}
+	@exposure
+	Groups: {
+		0 = private
+		1 = private
+	}
+	@description
+	Groups: {
+		0 = Devuelve un objeto con el join especificado
+		1 = Devuelve un objeto con el join especificado
+	}
+	@param
+	Groups: {
+		0 = {object} firstStorage - Instancia de un almacén de objetos <a class="fancy-goto" onclick="goto('MostachoDB_with.html')">MostachoDB.with()</a>
+		1 = object
+		2 = object
+		3 = firstStorage
+		4 = Instancia de un almacén de objetos <a class="fancy-goto" onclick="goto('MostachoDB_with.html')">MostachoDB.with()</a>
+	}
+	@param
+	Groups: {
+		0 = {object} secondStorage - Instancia de un almacén de objetos <a class="fancy-goto" onclick="goto('MostachoDB_with.html')">MostachoDB.with()</a>
+		1 = object
+		2 = object
+		3 = secondStorage
+		4 = Instancia de un almacén de objetos <a class="fancy-goto" onclick="goto('MostachoDB_with.html')">MostachoDB.with()</a>
+	}
+	@param
+	Groups: {
+		0 = {object} join - Especifica los campos a comparar. Formato del objeto: {on: 'campoTabla1', equals: 'campoTabla2'}
+		1 = object
+		2 = object
+		3 = join
+		4 = Especifica los campos a comparar. Formato del objeto: {on: 'campoTabla1', equals: 'campoTabla2'}
+	}
+	@param
+	Groups: {
+		0 = {string} fields - Campos a seleccionar separados por coma
+		1 = string
+		2 = string
+		3 = fields
+		4 = Campos a seleccionar separados por coma
+	}
+	@param
+	Groups: {
+		0 = {string} joinType - Tipo de Join a realizar: innerjoin, fulljoin, leftjoin, rightjoin
+		1 = string
+		2 = string
+		3 = joinType
+		4 = Tipo de Join a realizar: innerjoin, fulljoin, leftjoin, rightjoin
+	}
+}
+
+09:42:10.525 | OrionDocs Inf: Working on comment block #18
+09:42:10.525 | OrionDocs Inf: 7 tags were found
+09:42:10.525 | OrionDocs Inf: Comment Block #18 is:
+09:42:10.525 | Type: @function
+Tags: {
+	@function
+	Groups: {
+		0 = MostachoDB.with.whereClause
+		1 = whereClause
+		2 = whereClause
+	}
+	@exposure
+	Groups: {
+		0 = private
+		1 = private
+	}
+	@description
+	Groups: {
+		0 = Devuelve un arreglo de objetos (o una instancia <a class="fancy-goto" onclick="goto('MostachoDB_with.html')">MostachoDB.with()</a>) que cumplan la condición establecida
+		1 = Devuelve un arreglo de objetos (o una instancia <a class="fancy-goto" onclick="goto('MostachoDB_with.html')">MostachoDB.with()</a>) que cumplan la condición establecida
+	}
+	@warning
+	Groups: {
+		0 = Sólo puede ser usado después de select
+		1 = Sólo puede ser usado después de select
+	}
+	@param
+	Groups: {
+		0 = {object[]} recordset - Arreglo de objetos a ser considerados para la condición
+		1 = object[]
+		2 = object
+		3 = recordset
+		4 = Arreglo de objetos a ser considerados para la condición
+	}
+	@param
+	Groups: {
+		0 = {string} args - Condición empleada para la selección de registros
+		1 = string
+		2 = string
+		3 = args
+		4 = Condición empleada para la selección de registros
+	}
+	@param
+	Groups: {
+		0 = {string} fields - Campos que deben ser copiados, separados por lo menos comas
+		1 = string
+		2 = string
+		3 = fields
+		4 = Campos que deben ser copiados, separados por lo menos comas
+	}
+}
+
+09:42:10.525 | OrionDocs Inf: Working on comment block #19
+09:42:10.525 | OrionDocs Inf: 6 tags were found
+09:42:10.525 | OrionDocs Inf: Comment Block #19 is:
+09:42:10.525 | Type: @class
+Tags: {
+	@class
+	Groups: {
+		0 = MostachoDB.with.orderByClause
+		1 = orderByClause
+		2 = orderByClause
+	}
+	@exposure
+	Groups: {
+		0 = private
+		1 = private
+	}
+	@description
+	Groups: {
+		0 = Método que permite ordenar los registros devueltos por <a class="fancy-goto" onclick="goto('MostachoDB_with_whereClause.html')">MostachoDB.with.whereClause()</a>
+		1 = Método que permite ordenar los registros devueltos por <a class="fancy-goto" onclick="goto('MostachoDB_with_whereClause.html')">MostachoDB.with.whereClause()</a>
+	}
+	@param
+	Groups: {
+		0 = {object[]} recordset - Conjunto de registros devueltos por <a class="fancy-goto" onclick="goto('MostachoDB_with_whereClause.html')">MostachoDB.with.whereClause()</a>
+		1 = object[]
+		2 = object
+		3 = recordset
+		4 = Conjunto de registros devueltos por <a class="fancy-goto" onclick="goto('MostachoDB_with_whereClause.html')">MostachoDB.with.whereClause()</a>
+	}
+	@param
+	Groups: {
+		0 = {string[]} fields - Conjunto de campos que deben ser copiados
+		1 = string[]
+		2 = string
+		3 = fields
+		4 = Conjunto de campos que deben ser copiados
+	}
+	@param
+	Groups: {
+		0 = {string} field - Campo por el cuál deben ser ordenados los registros
+		1 = string
+		2 = string
+		3 = field
+		4 = Campo por el cuál deben ser ordenados los registros
+	}
+}
+
+09:42:10.525 | OrionDocs Inf: Working on comment block #20
+09:42:10.525 | OrionDocs Inf: 2 tags were found
+09:42:10.525 | OrionDocs Inf: Comment Block #20 is:
+09:42:10.525 | Type: @method
+Tags: {
+	@method
+	Groups: {
+		0 = MostachoDB.with.orderByClause.asc
+		1 = asc
+		2 = asc
+	}
+	@description
+	Groups: {
+		0 = Ordena los registros ascendentemente según el campo especificado
+		1 = Ordena los registros ascendentemente según el campo especificado
+	}
+}
+
+09:42:10.525 | OrionDocs Inf: Working on comment block #21
+09:42:10.525 | OrionDocs Inf: 2 tags were found
+09:42:10.525 | OrionDocs Inf: Comment Block #21 is:
+09:42:10.525 | Type: @method
+Tags: {
+	@method
+	Groups: {
+		0 = MostachoDB.with.orderByClause.desc
+		1 = desc
+		2 = desc
+	}
+	@description
+	Groups: {
+		0 = Ordena los registros descendentemente según el campo especificado
+		1 = Ordena los registros descendentemente según el campo especificado
+	}
+}
+
+09:42:10.541 | OrionDocs Inf: Working on comment block #22
+09:42:10.541 | OrionDocs Inf: 6 tags were found
+09:42:10.541 | OrionDocs Inf: Comment Block #22 is:
+09:42:10.541 | Type: @function
+Tags: {
+	@function
+	Groups: {
+		0 = MostachoDB.with.unionClause
+		1 = unionClause
+		2 = unionClause
+	}
+	@exposure
+	Groups: {
+		0 = private
+		1 = private
+	}
+	@description
+	Groups: {
+		0 = Método que permite unir los objetos devueltos por dos <a class="fancy-goto" onclick="goto('MostachoDB_with_select.html')">MostachoDB.with.select()</a> ordenados por el primer campo ascendentemente
+		1 = Método que permite unir los objetos devueltos por dos <a class="fancy-goto" onclick="goto('MostachoDB_with_select.html')">MostachoDB.with.select()</a> ordenados por el primer campo ascendentemente
+	}
+	@param
+	Groups: {
+		0 = {object[]} recordsetA - Conjunto de registros devueltos por <a class="fancy-goto" onclick="goto('MostachoDB_with_select.html')">MostachoDB.with.select()</a> o su instancia
+		1 = object[]
+		2 = object
+		3 = recordsetA
+		4 = Conjunto de registros devueltos por <a class="fancy-goto" onclick="goto('MostachoDB_with_select.html')">MostachoDB.with.select()</a> o su instancia
+	}
+	@param
+	Groups: {
+		0 = {object[]} recordsetB - Conjunto de registros devueltos por <a class="fancy-goto" onclick="goto('MostachoDB_with_select.html')">MostachoDB.with.select()</a> o su instancia
+		1 = object[]
+		2 = object
+		3 = recordsetB
+		4 = Conjunto de registros devueltos por <a class="fancy-goto" onclick="goto('MostachoDB_with_select.html')">MostachoDB.with.select()</a> o su instancia
+	}
+	@param
+	Groups: {
+		0 = {string[]} fields - Conjunto de campos que deben ser copiados
+		1 = string[]
+		2 = string
+		3 = fields
+		4 = Conjunto de campos que deben ser copiados
+	}
+}
+
+09:42:10.541 | OrionDocs Inf: Working on comment block #23
+09:42:10.541 | OrionDocs Inf: 6 tags were found
+09:42:10.541 | OrionDocs Inf: Comment Block #23 is:
+09:42:10.541 | Type: @function
+Tags: {
+	@function
+	Groups: {
+		0 = MostachoDB.with.unionallClause
+		1 = unionallClause
+		2 = unionallClause
+	}
+	@exposure
+	Groups: {
+		0 = private
+		1 = private
+	}
+	@description
+	Groups: {
+		0 = Método que permite unir los objetos devueltos por dos <a class="fancy-goto" onclick="goto('MostachoDB_with_select.html')">MostachoDB.with.select()</a> y posibilidad de ordenarlos mediante [orderByClause]
+		1 = Método que permite unir los objetos devueltos por dos <a class="fancy-goto" onclick="goto('MostachoDB_with_select.html')">MostachoDB.with.select()</a> y posibilidad de ordenarlos mediante [orderByClause]
+	}
+	@param
+	Groups: {
+		0 = {object[]} recordsetA - Conjunto de registros devueltos por <a class="fancy-goto" onclick="goto('MostachoDB_with_select.html')">MostachoDB.with.select()</a> o su instancia
+		1 = object[]
+		2 = object
+		3 = recordsetA
+		4 = Conjunto de registros devueltos por <a class="fancy-goto" onclick="goto('MostachoDB_with_select.html')">MostachoDB.with.select()</a> o su instancia
+	}
+	@param
+	Groups: {
+		0 = {object[]} recordsetB - Conjunto de registros devueltos por <a class="fancy-goto" onclick="goto('MostachoDB_with_select.html')">MostachoDB.with.select()</a> o su instancia
+		1 = object[]
+		2 = object
+		3 = recordsetB
+		4 = Conjunto de registros devueltos por <a class="fancy-goto" onclick="goto('MostachoDB_with_select.html')">MostachoDB.with.select()</a> o su instancia
+	}
+	@param
+	Groups: {
+		0 = {string[]} fields - Conjunto de campos que deben ser copiados
+		1 = string[]
+		2 = string
+		3 = fields
+		4 = Conjunto de campos que deben ser copiados
+	}
+}
+
+09:42:10.541 | OrionDocs Inf: Distribution directory 'dist' has been created.
+09:42:10.541 | OrionDocs Inf: Project directory 'dist/MostachoDB' has been created.
+09:42:10.541 | OrionDocs Inf: StreamWriter for file 'dist/MostachoDB/MostachoDB.html' has been created.
+09:42:10.557 | OrionDocs Inf: StreamWriter has finished without errors.
+09:42:10.619 | OrionDocs Inf: StreamWriter for file 'dist/MostachoDB/MostachoDB_preparetable.html' has been created.
+09:42:10.619 | OrionDocs Inf: StreamWriter has finished without errors.
+09:42:10.619 | OrionDocs Inf: StreamWriter for file 'dist/MostachoDB/MostachoDB_connect.html' has been created.
+09:42:10.635 | OrionDocs Inf: StreamWriter has finished without errors.
+09:42:10.635 | OrionDocs Inf: StreamWriter for file 'dist/MostachoDB/MostachoDB_sync.html' has been created.
+09:42:10.635 | OrionDocs Inf: StreamWriter has finished without errors.
+09:42:10.635 | OrionDocs Inf: StreamWriter for file 'dist/MostachoDB/MostachoDB_close.html' has been created.
+09:42:10.651 | OrionDocs Inf: StreamWriter has finished without errors.
+09:42:10.651 | OrionDocs Inf: StreamWriter for file 'dist/MostachoDB/MostachoDB_dropdb.html' has been created.
+09:42:10.666 | OrionDocs Inf: StreamWriter has finished without errors.
+09:42:10.666 | OrionDocs Inf: StreamWriter for file 'dist/MostachoDB/MostachoDB_isConnected.html' has been created.
+09:42:10.666 | OrionDocs Inf: StreamWriter has finished without errors.
+09:42:10.666 | OrionDocs Inf: StreamWriter for file 'dist/MostachoDB/MostachoDB_droptable.html' has been created.
+09:42:10.682 | OrionDocs Inf: StreamWriter has finished without errors.
+09:42:10.682 | OrionDocs Inf: StreamWriter for file 'dist/MostachoDB/MostachoDB_showtables.html' has been created.
+09:42:10.682 | OrionDocs Inf: StreamWriter has finished without errors.
+09:42:10.682 | OrionDocs Inf: StreamWriter for file 'dist/MostachoDB/MostachoDB_tableexists.html' has been created.
+09:42:10.682 | OrionDocs Inf: StreamWriter has finished without errors.
+09:42:10.682 | OrionDocs Inf: StreamWriter for file 'dist/MostachoDB/MostachoDB_with.html' has been created.
+09:42:10.697 | OrionDocs Inf: StreamWriter has finished without errors.
+09:42:10.697 | OrionDocs Inf: StreamWriter for file 'dist/MostachoDB/MostachoDB_with_getTransaction.html' has been created.
+09:42:10.697 | OrionDocs Inf: StreamWriter has finished without errors.
+09:42:10.697 | OrionDocs Inf: StreamWriter for file 'dist/MostachoDB/MostachoDB_with_trigger.html' has been created.
+09:42:10.713 | OrionDocs Inf: StreamWriter has finished without errors.
+09:42:10.713 | OrionDocs Inf: StreamWriter for file 'dist/MostachoDB/MostachoDB_with_truncate.html' has been created.
+09:42:10.713 | OrionDocs Inf: StreamWriter has finished without errors.
+09:42:10.713 | OrionDocs Inf: StreamWriter for file 'dist/MostachoDB/MostachoDB_with_insert.html' has been created.
+09:42:10.713 | OrionDocs Inf: StreamWriter has finished without errors.
+09:42:10.713 | OrionDocs Inf: StreamWriter for file 'dist/MostachoDB/MostachoDB_with_select.html' has been created.
+09:42:10.729 | OrionDocs Inf: StreamWriter has finished without errors.
+09:42:10.729 | OrionDocs Inf: StreamWriter for file 'dist/MostachoDB/MostachoDB_with_joinClause.html' has been created.
+09:42:10.729 | OrionDocs Inf: StreamWriter has finished without errors.
+09:42:10.729 | OrionDocs Inf: StreamWriter for file 'dist/MostachoDB/MostachoDB_with_whereClause.html' has been created.
+09:42:10.744 | OrionDocs Inf: StreamWriter has finished without errors.
+09:42:10.744 | OrionDocs Inf: StreamWriter for file 'dist/MostachoDB/MostachoDB_with_orderByClause.html' has been created.
+09:42:10.744 | OrionDocs Inf: StreamWriter has finished without errors.
+09:42:10.744 | OrionDocs Inf: StreamWriter for file 'dist/MostachoDB/MostachoDB_with_orderByClause_asc.html' has been created.
+09:42:10.744 | OrionDocs Inf: StreamWriter has finished without errors.
+09:42:10.744 | OrionDocs Inf: StreamWriter for file 'dist/MostachoDB/MostachoDB_with_orderByClause_desc.html' has been created.
+09:42:10.760 | OrionDocs Inf: StreamWriter has finished without errors.
+09:42:10.791 | OrionDocs Inf: StreamWriter for file 'dist/MostachoDB/MostachoDB_with_unionClause.html' has been created.
+09:42:10.807 | OrionDocs Inf: StreamWriter has finished without errors.
+09:42:10.807 | OrionDocs Inf: StreamWriter for file 'dist/MostachoDB/MostachoDB_with_unionallClause.html' has been created.
+09:42:10.807 | OrionDocs Inf: StreamWriter has finished without errors.
+09:42:10.807 | OrionDocs Inf: Creating index file 'dist/MostachoDB/index.html'.
+09:42:10.807 | OrionDocs Inf: Replacing '{PAGE(0)}' to 'MostachoDB.html'.
+09:42:11.025 | OrionDocs Inf: Dir copied from: 'C:\Program Files (x86)\OrionDocs\templates\Fancy\img' to 'dist/MostachoDB/img'.
+09:42:11.041 | OrionDocs Inf: Dir copied from: 'C:\Program Files (x86)\OrionDocs\templates\Fancy\css' to 'dist/MostachoDB/css'.
+09:42:11.072 | OrionDocs Inf: Dir copied from: 'C:\Program Files (x86)\OrionDocs\templates\Fancy\fa' to 'dist/MostachoDB/fa'.
+09:42:11.072 | OrionDocs Inf: Dir copied from: 'C:\Program Files (x86)\OrionDocs\templates\Fancy\js' to 'dist/MostachoDB/js'.
+09:42:11.088 | OrionDocs Inf: Dir copied from: 'C:\Program Files (x86)\OrionDocs\templates\Fancy\prism' to 'dist/MostachoDB/prism'.
+09:42:11.088 | OrionDocs Inf: Creating clean file for 'dist/MostachoDB.js'.
+09:42:11.088 | OrionDocs Inf: Done.
