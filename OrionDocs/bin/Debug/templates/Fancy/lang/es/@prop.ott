@@ -1,4 +1,0 @@
-					<tr>
-						<td><img src="img/field{1}.png" style="vertical-align: middle" alt="{1}"><span class="prop-name">{4}</span><sup class="param-type param-type-{tolower({3})}">{3}</sup></td>
-						<td>{5}</td>
-					</tr>
