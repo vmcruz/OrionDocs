@@ -4,3 +4,4 @@ OrionDocs/obj
 *.suo
 _ReSharper.*
 *.sln.cache
+*Thumbs.db
