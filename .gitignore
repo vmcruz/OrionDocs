@@ -1,0 +1,6 @@
+OrionDocs/bin
+OrionDocs/obj
+*.user
+*.suo
+_ReSharper.*
+*.sln.cache
